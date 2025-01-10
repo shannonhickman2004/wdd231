@@ -1,0 +1,275 @@
+/* General body */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    line-height: 1.6;
+    background-color: #f9f9f9;
+    color: #333333;
+}
+
+/* Top Header */
+.header-top {
+    display: flex;
+    justify-content: flex-end;
+    /* Align hamburger to the right */
+    align-items: center;
+    /* Vertically center */
+    padding: 1rem;
+    background-color: #8B0000;
+    color: white;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* Header Container */
+.header-container {
+    display: flex;
+    justify-content: center;
+    /* Center horizontally */
+    align-items: center;
+    /* Center vertically */
+    padding: 1rem;
+    background-color: #8B0000;
+    color: white;
+}
+
+.profile-photo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-right: 1rem;
+}
+
+.header-name {
+    margin: 0;
+    font-size: 1.5rem;
+    white-space: nowrap;
+}
+
+/* Navigation */
+nav {
+    background-color: #8B0000; /* Red navigation bar */
+    padding: 0;
+    margin: 0;
+}
+
+nav ul {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    flex: 1; /* Each link takes equal width */
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    display: block;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background-color: #262626; /* Gray background for menu items */
+    border-radius: 5px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+nav ul li a:hover {
+    background-color: #555555; /* Darker gray on hover */
+}
+
+/* Content Area */
+.content-area {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.card {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    background-color: #8B0000;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    border-radius: 10px 10px 0 0;
+}
+
+.card ul {
+    padding: 0;
+    margin-left: 20px;
+}
+
+.card ul li {
+    margin-bottom: 10px;
+}
+
+/* Certificate Section */
+#certificate {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#certificate h2 {
+    background-color: #8B0000;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    margin: 0;
+    /* take out the gaps */
+    border-radius: 8px 8px 0 0;
+    /* makes the corners smooth */
+    font-size: 1.5rem;
+}
+
+.filter-buttons {
+    display: flex;
+    justify-content: center;
+    /* Center all the buttons */
+    gap: 1rem;
+    margin: 20px 0;
+}
+
+.filter-buttons button {
+    padding: 0.5rem 1rem;
+    background-color: #8B0000;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.filter-buttons button:hover {
+    background-color: #555555;
+}
+
+/* Course Grid */
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    /* spaces between the items in the grid */
+    margin-top: 1rem;
+    max-width: 100%;
+    /* makes sure it doesn't go beyond the column width */
+    margin: 0 auto;
+    /* centers the grid */
+}
+
+.course-card {
+    padding: 1rem;
+    background-color: #ccc;
+    color: #333;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+div.course-card.completed {
+    background-color: #8B0000;
+    color: white;
+}
+
+#total-credits {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-top: 10px;
+}
+
+/* Footer */
+footer {
+    background-color: #8B0000;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+/* Mobile View */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block; /* Show hamburger menu button */
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+
+    .content-area {
+        grid-template-columns: 1fr; /* Single column layout for mobile */
+        gap: 20px; /* Space between rows */
+        padding: 20px;
+    }
+
+    .card {
+        width: 100%; /* Ensure cards fill the available space */
+        max-width: 500px; /* Limit max width for better readability */
+        margin: 0 auto; /* Center the cards horizontally */
+    }
+}
+
+    .location {
+        padding: 0 1rem; /* Add consistent padding on both sides for mobile */
+    }
+
+    .location img {
+        max-width: calc(100% - 2rem); /* Adjust for padding (1rem each side) */
+        height: auto;
+    }
+
+    .location p {
+        margin: 1rem auto;
+    }
+}
+
+    nav ul {
+        display: none; /* Hide navigation links by default */
+        flex-direction: column; /* Stack links vertically */
+        gap: 0.5rem;
+        background-color: #8B0000; /* Background for dropdown menu */
+        padding: 1rem;
+        margin: 0;
+    }
+
+    nav ul.active {
+        display: flex; /* Show navigation links when active */
+    }
+
+    nav ul li a {
+        font-size: 1rem; /* Adjust font size for mobile */
+        padding: 0.75rem;
+    }
+}

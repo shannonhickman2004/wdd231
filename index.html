@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="WDD 231: Web Frontend Development I Course Home Page">
+    <meta name="author" content="Shannon Hickman">
+    <title>WDD 231: Course Home Page</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="scripts/script.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <div class="header-top">
+            <button class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        </div>
+        <div class="header-container">
+            <img src="images/profile.jpg" alt="Profile Photo" class="profile-photo">
+            <h1 class="header-name">Shannon Hickman</h1>
+        </div>
+        <nav>
+            <ul class="menu">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="#">Chamber</a></li>
+                <li><a href="https://github.com/shannonhickman2004" target="_blank">GitHub Profile</a></li>
+                <li><a href="https://www.linkedin.com/in/shannon-hickman-06134b27b/" target="_blank">LinkedIn</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Course Work and Location Section -->
+        <section class="content-area">
+            <div class="card course-work">
+                <h2>Course Work</h2>
+                <ul>
+                    <li>Home Page</li>
+                    <li>Chamber of Commerce Website</li>
+                    <li>Final Project</li>
+                </ul>
+            </div>
+            <div class="card location">
+                <picture>
+                    <!-- Small Image for Mobile -->
+                    <source srcset="images/hero-small.webp" media="(max-width: 768px)">
+                    <!-- Large Image for Desktop -->
+                    <source srcset="images/logan.jpeg" media="(min-width: 769px)">
+                    <!-- Fallback Image -->
+                    <img src="images/logan.jpeg" alt="Logan Utah Temple">
+                </picture>
+                <p>Logan Utah Temple</p>
+            </div>
+        </section>
+
+        <section id="certificate">
+            <h2>Web and Computer Programming Certificate</h2>
+            <div class="filter-buttons">
+                <button data-filter="all">All</button>
+                <button data-filter="cse">CSE</button>
+                <button data-filter="wdd">WDD</button>
+            </div>
+            <div id="course-list" class="course-grid">
+                <!-- Course Cards -->
+                <div class="course-card completed" data-credits="2">CSE 110<br>Intro to Programming<br>2 Credits</div>
+                <div class="course-card completed" data-credits="2">WDD 130<br>Web Fundamentals<br>2 Credits</div>
+                <div class="course-card" data-credits="2">CSE 111<br>Programming with Functions<br>2 Credits</div>
+                <div class="course-card" data-credits="2">CSE 210<br>Programming with Classes<br>2 Credits</div>
+                <div class="course-card" data-credits="2">WDD 131<br>Dynamic Web Fundamentals<br>2 Credits</div>
+                <div class="course-card completed" data-credits="2">WDD 231<br>Web Frontend Development I<br>2 Credits</div>
+            </div>
+            <hr>
+            <p id="total-credits"></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="currentYear"></span> Shannon Hickman | Herriman, UT</p>
+        <p id="lastModified"></p>
+    </footer>
+</body>
+
+</html>
