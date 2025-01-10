@@ -207,14 +207,17 @@ div.course-card.completed {
 #total-credits-section {
     text-align: center;
     padding: 20px;
-    background-color: #f4f4f4; /* Light background for separation */
-    border-top: 1px solid #ccc; /* Divider line */
+    background-color: #f4f4f4;
+    /* Light background for separation */
+    border-top: 1px solid #ccc;
+    /* Divider line */
     margin-top: 20px;
 }
 
 #total-credits-section h2 {
     font-size: 1.5rem;
-    color: #8B0000; /* Match the red theme */
+    color: #8B0000;
+    /* Match the red theme */
     margin-bottom: 10px;
 }
 
@@ -301,20 +304,26 @@ footer {
         /* Adjust font size for mobile */
         padding: 0.75rem;
     }
+
     #total-credits-section {
-        padding: 10px; /* Reduce padding for smaller screens */
-        font-size: 1rem; /* Adjust font size for readability */
+        padding: 10px;
+        /* Reduce padding for smaller screens */
+        font-size: 1rem;
+        /* Adjust font size for readability */
         text-align: center;
     }
 
     #total-credits-section h2 {
-        font-size: 1.2rem; /* Slightly smaller heading size for mobile */
-        margin-bottom: 8px; /* Reduce spacing */
+        font-size: 1.2rem;
+        /* Slightly smaller heading size for mobile */
+        margin-bottom: 8px;
+        /* Reduce spacing */
     }
 
     #total-credits {
-        font-size: 1rem; /* Reduce font size for total credits text */
-        line-height: 1.4; /* Improve readability */
+        font-size: 1rem;
+        /* Reduce font size for total credits text */
+        line-height: 1.4;
+        /* Improve readability */
     }
-}
 }
