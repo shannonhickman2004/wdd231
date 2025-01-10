@@ -131,6 +131,13 @@ nav ul li a:hover {
     margin-bottom: 10px;
 }
 
+.responsive-image {
+    max-width: 100%; 
+    height: auto; 
+    display: block; 
+    object-fit: cover; 
+}
+
 /* Certificate Section */
 #certificate {
     max-width: 1200px;
