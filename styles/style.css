@@ -55,7 +55,8 @@ body {
 
 /* Navigation */
 nav {
-    background-color: #8B0000; /* Red navigation bar */
+    background-color: #8B0000;
+    /* Red navigation bar */
     padding: 0;
     margin: 0;
 }
@@ -70,7 +71,8 @@ nav ul {
 }
 
 nav ul li {
-    flex: 1; /* Each link takes equal width */
+    flex: 1;
+    /* Each link takes equal width */
 }
 
 nav ul li a {
@@ -81,13 +83,15 @@ nav ul li a {
     display: block;
     font-size: 1.2rem;
     font-weight: bold;
-    background-color: #262626; /* Gray background for menu items */
+    background-color: #262626;
+    /* Gray background for menu items */
     border-radius: 5px;
     transition: background-color 0.3s ease-in-out;
 }
 
 nav ul li a:hover {
-    background-color: #555555; /* Darker gray on hover */
+    background-color: #555555;
+    /* Darker gray on hover */
 }
 
 /* Content Area */
@@ -200,13 +204,26 @@ div.course-card.completed {
     color: white;
 }
 
-#total-credits {
+#total-credits-section {
     text-align: center;
+    padding: 20px;
+    background-color: #f4f4f4; /* Light background for separation */
+    border-top: 1px solid #ccc; /* Divider line */
+    margin-top: 20px;
+}
+
+#total-credits-section h2 {
+    font-size: 1.5rem;
+    color: #8B0000; /* Match the red theme */
+    margin-bottom: 10px;
+}
+
+#total-credits {
     font-size: 1.2rem;
     font-weight: bold;
     color: #333;
-    margin-top: 10px;
 }
+
 
 /* Footer */
 footer {
@@ -220,7 +237,8 @@ footer {
 /* Mobile View */
 @media (max-width: 768px) {
     .menu-toggle {
-        display: block; /* Show hamburger menu button */
+        display: block;
+        /* Show hamburger menu button */
         background: none;
         border: none;
         color: white;
@@ -229,24 +247,31 @@ footer {
     }
 
     .content-area {
-        grid-template-columns: 1fr; /* Single column layout for mobile */
-        gap: 20px; /* Space between rows */
+        grid-template-columns: 1fr;
+        /* Single column layout for mobile */
+        gap: 20px;
+        /* Space between rows */
         padding: 20px;
     }
 
     .card {
-        width: 100%; /* Ensure cards fill the available space */
-        max-width: 500px; /* Limit max width for better readability */
-        margin: 0 auto; /* Center the cards horizontally */
+        width: 100%;
+        /* Ensure cards fill the available space */
+        max-width: 500px;
+        /* Limit max width for better readability */
+        margin: 0 auto;
+        /* Center the cards horizontally */
     }
 
 
     .location {
-        padding: 0 1rem; /* Add consistent padding on both sides for mobile */
+        padding: 0 1rem;
+        /* Add consistent padding on both sides for mobile */
     }
 
     .location img {
-        max-width: calc(100% - 2rem); /* Adjust for padding (1rem each side) */
+        max-width: calc(100% - 2rem);
+        /* Adjust for padding (1rem each side) */
         height: auto;
     }
 
@@ -255,20 +280,41 @@ footer {
     }
 
     nav ul {
-        display: none; /* Hide navigation links by default */
-        flex-direction: column; /* Stack links vertically */
+        display: none;
+        /* Hide navigation links by default */
+        flex-direction: column;
+        /* Stack links vertically */
         gap: 0.5rem;
-        background-color: #8B0000; /* Background for dropdown menu */
+        background-color: #8B0000;
+        /* Background for dropdown menu */
         padding: 1rem;
         margin: 0;
     }
 
     nav ul.active {
-        display: flex; /* Show navigation links when active */
+        display: flex;
+        /* Show navigation links when active */
     }
 
     nav ul li a {
-        font-size: 1rem; /* Adjust font size for mobile */
+        font-size: 1rem;
+        /* Adjust font size for mobile */
         padding: 0.75rem;
     }
+    #total-credits-section {
+        padding: 10px; /* Reduce padding for smaller screens */
+        font-size: 1rem; /* Adjust font size for readability */
+        text-align: center;
+    }
+
+    #total-credits-section h2 {
+        font-size: 1.2rem; /* Slightly smaller heading size for mobile */
+        margin-bottom: 8px; /* Reduce spacing */
+    }
+
+    #total-credits {
+        font-size: 1rem; /* Reduce font size for total credits text */
+        line-height: 1.4; /* Improve readability */
+    }
+}
 }

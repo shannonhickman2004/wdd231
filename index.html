@@ -8,6 +8,8 @@
     <meta name="author" content="Shannon Hickman">
     <title>WDD 231: Course Home Page Shannon Hickman</title>
     <link rel="stylesheet" href="styles/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <script src="scripts/script.js" defer></script>
 </head>
@@ -55,6 +57,7 @@
             </div>
         </section>
 
+        <!-- Certificate Section -->
         <section id="certificate">
             <h2>Web and Computer Programming Certificate</h2>
             <div class="filter-buttons">
@@ -63,7 +66,6 @@
                 <button data-filter="wdd">WDD</button>
             </div>
             <div id="course-list" class="course-grid">
-                <!-- Course Cards -->
                 <div class="course-card completed" data-credits="2">CSE 110<br>Intro to Programming<br>2 Credits</div>
                 <div class="course-card completed" data-credits="2">WDD 130<br>Web Fundamentals<br>2 Credits</div>
                 <div class="course-card" data-credits="2">CSE 111<br>Programming with Functions<br>2 Credits</div>
@@ -72,10 +74,15 @@
                 <div class="course-card completed" data-credits="2">WDD 231<br>Web Frontend Development I<br>2 Credits
                 </div>
             </div>
-            <hr>
-            <p id="total-credits"></p>
+        </section>
+
+        <!-- Total Credits Section -->
+        <section id="total-credits-section">
+            <h2>Total Credits</h2>
+            <p id="total-credits">Total Credits: 0</p>
         </section>
     </main>
+
 
     <footer>
         <p>&copy; <span id="currentYear"></span> Shannon Hickman | Herriman, UT</p>
