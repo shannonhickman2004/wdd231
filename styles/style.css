@@ -55,44 +55,40 @@ body {
 
 /* Navigation */
 nav {
-    background-color: #8B0000;
-    /* Red navigation bar */
-    padding: 0;
-    margin: 0;
+    background-color: #262626; /* this makes one solid navigation bar */
+    padding: 0 2rem; /* pads more on the outside of menu items */
 }
 
 nav ul {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: center; /* Center the menu items */
+    align-items: center; /* Align items vertically */
     list-style-type: none;
     padding: 0;
     margin: 0;
+    gap: 1rem; /* Small gap between menu items */
 }
 
 nav ul li {
-    flex: 1;
-    /* Each link takes equal width */
+    flex: none; /* Let items size based on content */
 }
 
 nav ul li a {
     text-decoration: none;
     color: white;
-    padding: 1rem;
+    padding: 0.75rem 1rem; /* padding on the inside */
     text-align: center;
-    display: block;
+    display: block; /* helps keep themin blocks for sizing */
     font-size: 1.2rem;
     font-weight: bold;
-    background-color: #262626;
-    /* Gray background for menu items */
-    border-radius: 5px;
+    background-color: #262626; /* can't see the separation because of same color */
     transition: background-color 0.3s ease-in-out;
 }
 
 nav ul li a:hover {
-    background-color: #555555;
-    /* Darker gray on hover */
+    background-color: #555555; /* Slightly darker grey for hover effect */
 }
+
 
 /* Content Area */
 .content-area {
