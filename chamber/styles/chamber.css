@@ -1,9 +1,13 @@
 :root {
-    --primary-color: #7A2E1C; /* Deep burnt sienna (similar to red rock hues) */
-    --secondary-color: #298B8D; /* Indian turquoise, deeper for better contrast */
-    --neutral-color1: #F5F5F5; /* Soft sandstone white for backgrounds */
-    --neutral-color2: #4F3D27; /* Rich earthy brown for text or accents */
-    --accent-color1: #A0522D; 
+    --primary-color: #7A2E1C;
+    /* Deep burnt sienna (similar to red rock hues) */
+    --secondary-color: #298B8D;
+    /* Indian turquoise, deeper for better contrast */
+    --neutral-color1: #F5F5F5;
+    /* Soft sandstone white for backgrounds */
+    --neutral-color2: #4F3D27;
+    /* Rich earthy brown for text or accents */
+    --accent-color1: #A0522D;
     --header-font: 'Playfair Display', serif;
     --body-font: 'Lato', sans-serif;
 }
@@ -104,8 +108,8 @@ header {
 
 button {
     padding: 0.5rem 1rem;
-    border: 1px solid var(--secondary-color);
-    background-color: var(--secondary-color);
+    border: 1px solid var(--neutral-color2);
+    background-color: var(--neutral-color2);
     color: var(--neutral-color1);
     border-radius: 4px;
     cursor: pointer;
@@ -232,6 +236,7 @@ button:hover {
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+
 /* styling for website column */
 #directory.list-view .member-card a {
     color: var(--secondary-color);
