@@ -179,7 +179,7 @@ button:hover {
 /* Website Links Styling */
 #directory .member-card .website-link {
     font-size: 1rem;
-    color: var(--secondary-color, #30C8B0);
+    color: var(--neutral-color2, #4F3D27);
     text-decoration: none;
     font-weight: bold;
     word-break: break-word;
