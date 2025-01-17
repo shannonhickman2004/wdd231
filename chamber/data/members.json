@@ -1,0 +1,59 @@
+[
+    {
+        "name": "Cedar Mesa Pottery",
+        "address": "497 W Main St, Blanding, UT 84511",
+        "phone": "(435) 678-2241",
+        "website": "https://www.cmpottery.com/",
+        "image": "cedarmesa.webp",
+        "membershipLevel": "Gold"
+      },
+      {
+        "name": "Blue Sage Inn & Suites",
+        "address": "132 S Main St, Blanding, UT 84511",
+        "phone": "(435) 678-2278",
+        "website": "https://www.bluesageinn.com/",
+        "image": "bluesage.webp",
+        "membershipLevel": "Gold"
+      },
+
+    {
+        "name": "Blue Mountain Trading Post",
+        "address": "1930 S Main St, Blanding, UT 84511",
+        "phone": "(435) 678-7840",
+        "website": "https://www.bluemountainrvpark.com/trading-post.html",
+        "image": "bluemountain.webp",
+        "membershipLevel": "Silver"
+      },
+    {
+        "name": "Homestead Steak House",
+        "address": "121 E Center St, Blanding, UT 84511",
+        "phone": "(435) 678-3456",
+        "website": "https://www.homesteadsteakhouseut.com/",
+        "image": "homestead.avif",
+        "membershipLevel": "Member"
+    },
+    {
+        "name": "Edge of the Cedars State Park Museum",
+        "address": "660 W 400 N, Blanding, UT 84511",
+        "phone": "(435) 678-2238",
+        "website": "https://stateparks.utah.gov/parks/edge-of-the-cedars/",
+        "image": "cedars.webp",
+        "membershipLevel": "Gold"
+    },
+    {
+        "name": "Clark's Market",
+        "address": "820 S Main St, Blanding, UT 84511",
+        "phone": "(435) 678-2721",
+        "website": "https://clarksmarket.com/",
+        "image": "clarks.webp",
+        "membershipLevel": "Gold"
+    },
+    {
+        "name": "Yak's Café",
+        "address": "25 E Center St, Blanding, UT 84511",
+        "phone": "(435) 678-2887",
+        "website": "https://yaks.cafe/",
+        "image": "yaks.webp",
+        "membershipLevel": "Gold"
+      }
+]

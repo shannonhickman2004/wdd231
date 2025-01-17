@@ -1,0 +1,395 @@
+/* Define Color Palette and Fonts */
+:root {
+    --primary-color: #8A320E;
+    --secondary-color: #30C8B0;
+    --neutral-color1: #FFFFFF;
+    --neutral-color2: #6C4A26;
+    --accent-color1: #8A320E;
+    --header-font: 'Playfair Display', serif;
+    --body-font: 'Lato', sans-serif;
+}
+
+/* General Body Styling */
+body {
+    font-family: var(--body-font);
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: var(--neutral-color1);
+    color: var(--neutral-color2);
+   /* overflow-x: hidden;
+    /* Prevent horizontal scrolling */
+}
+
+/* Header Styling */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--primary-color, #8A320E);
+    color: var(--neutral-color1, #FFFFFF);
+    padding: 1.5rem 2rem;
+    position: relative;
+}
+
+/* Logo Section */
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo {
+    width: 100px; /* Adjust size */
+    height: auto;
+}
+
+.logo-container h1 {
+    font-size: 2rem;
+    margin: 0;
+    font-family: var(--header-font, serif);
+}
+
+/* Navigation Styling */
+.navigation {
+    display: flex;
+    gap: 2rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--neutral-color1, #FFFFFF);
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: color 0.3s, background-color 0.3s;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    background-color: var(--secondary-color, #30C8B0);
+    color: var(--neutral-color2, #000000);
+}
+
+.nav-link.active {
+    background-color: var(--secondary-color, #30C8B0);
+    color: var(--neutral-color2, #000000);
+}
+
+/* Hamburger Menu Button */
+#menu {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 2rem; /* Slightly larger for better visibility */
+    color: var(--neutral-color1, #FFFFFF);
+    cursor: pointer;
+    z-index: 10;
+    position: relative;
+}
+
+#menu::before {
+    content: "☰"; /* Hamburger icon */
+}
+
+#menu.open::before {
+    content: "✖"; /* Close icon */
+}
+
+/* View Toggle Buttons */
+#view-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+button {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--secondary-color);
+    background-color: var(--secondary-color);
+    color: var(--neutral-color1);
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--body-font);
+}
+
+button:hover {
+    background-color: var(--accent-color1);
+    border-color: var(--accent-color1);
+}
+
+/* Business Directory Styling */
+#directory {
+    padding: 1rem;
+}
+
+/* Grid View Styling */
+#directory.grid-view {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+#directory.grid-view .member-card {
+    flex: 1 1 calc(33.33% - 2rem);
+    /* Three cards per row */
+    max-width: calc(33.33% - 2rem);
+    display: flex;
+    flex-direction: column;
+    /* Ensure vertical stacking of content */
+    justify-content: space-between;
+    /* Distribute content evenly */
+    align-items: center;
+    /* Center content horizontally */
+    padding: 1rem;
+    box-sizing: border-box;
+    height: 100%;
+    /* Enforce consistent height */
+    min-height: 300px;
+    /* Set a minimum height */
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    background-color: var(--neutral-color1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#directory.grid-view .member-card h2 {
+    font-family: var(--header-font);
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+#directory.grid-view .member-card img {
+    max-width: 100px;
+    height: auto;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+}
+
+#directory.grid-view .member-card:hover {
+    box-shadow: 0px 6px 8px #8A320E;
+    transform: translateY(-3px);
+}
+
+/* List View Styling */
+#directory.list-view {
+    display: flex;
+    flex-direction: column;
+    /* Stack rows vertically */
+    padding: 1rem;
+    align-items: center;
+    /* Center all rows in the container */
+}
+
+#directory.list-view .member-card {
+    display: grid;
+    /* Use CSS Grid for precise column control */
+    grid-template-columns: repeat(4, 1fr);
+    /* Four equal-width columns */
+    gap: 1rem;
+    /* Add space between columns */
+    width: 100%;
+    /* Take full width of the container */
+    max-width: 1200px;
+    /* Center the content and constrain the width */
+    padding: 1rem;
+    border: none;
+    /* Remove borders for plain list appearance */
+    box-shadow: none;
+    /* Remove shadow for plain appearance */
+    background-color: var(--neutral-color1);
+    color: var(--neutral-color2);
+}
+
+/* Zebra Striping */
+#directory.list-view .member-card:nth-child(odd) {
+    background-color: #f9f9f9;
+    /* Light stripe color */
+}
+
+#directory.list-view .member-card:nth-child(even) {
+    background-color: #eeeeee;
+    /* Alternate stripe color */
+}
+
+/* Columns Styling */
+#directory.list-view .member-card div {
+    text-align: left;
+    /* Align text to the left */
+    padding: 0 1rem;
+    /* Add padding inside each column */
+    overflow: hidden;
+    /* Prevent overflowing content */
+    white-space: nowrap;
+    /* Prevent wrapping of text */
+    text-overflow: ellipsis;
+    /* Add ellipsis for overflowing text */
+}
+
+/* Special Styling for Website Column */
+#directory.list-view .member-card .website a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    overflow: hidden;
+    display: inline-block;
+    max-width: 100%;
+    /* Ensure the URL fits within its column */
+}
+
+#directory.list-view .member-card .website a:hover {
+    text-decoration: underline;
+    color: var(--accent-color1);
+}
+
+/* Hide Images in List View */
+#directory.list-view .member-card img {
+    display: none;
+    /* Completely hide images in list view */
+}
+
+
+/* Footer Styling */
+footer {
+    background-color: var(--primary-color);
+    color: var(--neutral-color1);
+    padding: 2rem 1rem;
+    font-family: var(--body-font);
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* Three equal columns */
+    gap: 2rem; /* Spacing between columns */
+    max-width: 1200px;
+    margin: 0 auto; /* Center the grid container */
+    align-items: center; /* Vertically align items in the grid */
+}
+
+/* Left Column: Business Info */
+.businessinfo {
+    text-align: left; /* Align text to the left */
+}
+
+.businessinfo p {
+    margin: 0.5rem 0; /* Add spacing between lines */
+}
+
+/* Middle Column: Social Links */
+.sociallinks {
+    display: flex;
+    justify-content: center; /* Center the links horizontally */
+    gap: 1rem; /* Add space between the social icons */
+}
+
+.sociallinks a img {
+    height: 60px; /* Ensure consistent size for icons */
+    width: auto;
+    transition: transform 0.3s ease; /* Add a hover effect */
+}
+
+.sociallinks a img:hover {
+    transform: scale(1.1); /* Slightly enlarge on hover */
+}
+
+/* Right Column: Author Info */
+.author {
+    text-align: right; /* Align text to the right */
+}
+
+.author p {
+    margin: 0.5rem 0; /* Add spacing between lines */
+}
+/* Mobile Adjustment: Single Column in Grid View */
+/* Mobile Adjustment: Single Column in Grid View */
+@media (max-width: 768px) {
+    #directory.grid-view {
+        display: flex;
+        flex-direction: column;
+        /* Stack cards vertically */
+        align-items: center;
+        /* Center cards horizontally */
+        gap: 1rem;
+        /* Maintain spacing between cards */
+    }
+
+    #directory.grid-view .member-card {
+        flex: 1 1 100%;
+        /* Single card per row */
+        max-width: 100%;
+        /* Ensure it spans the container width */
+        font-size: 1rem; /* Specify a font size value */
+    }
+
+    #menu {
+        display: block; /* Display hamburger menu on mobile */
+    }
+
+    .grid-view {
+        grid-template-columns: 1fr; /* Single column layout */
+        margin-top: calc(100% + 1rem); /* Ensure it appears below the menu */
+    }
+
+    .member-card {
+        margin: 0 auto; /* Center-align cards */
+    }
+
+    .navigation {
+        display: none; /* Hide navigation by default on mobile */
+        flex-direction: column;
+        gap: 1rem;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: var(--primary-color, #8A320E);
+        width: 100%;
+        padding: 1.5rem;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+
+    .navigation.open {
+        display: flex; /* Show navigation when open */
+    }
+
+    .nav-link {
+        text-align: center;
+        padding: 1rem;
+    }
+
+    .logo-container h1 {
+        font-size: 1.2rem; /* Adjust to a smaller size for mobile */
+    }
+
+    .logo {
+        width: 60px; /* Optionally reduce the logo size as well */
+    }
+
+    header {
+        padding: 1rem; /* Reduce padding to make the header more compact */
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr; /* Stack columns vertically */
+        text-align: center; /* Center-align text for all columns */
+    }
+
+    .businessinfo,
+    .author {
+        text-align: center; /* Override text alignment for small screens */
+    }
+
+    .sociallinks {
+        justify-content: center; /* Ensure links remain centered */
+    }
+}
+
+
+
