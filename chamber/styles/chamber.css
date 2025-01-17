@@ -1,9 +1,9 @@
 :root {
-    --primary-color: #8A320E;
-    --secondary-color: #30C8B0;
-    --neutral-color1: #FFFFFF;
-    --neutral-color2: #6C4A26;
-    --accent-color1: #8A320E;
+    --primary-color: #7A2E1C; /* Deep burnt sienna (similar to red rock hues) */
+    --secondary-color: #298B8D; /* Indian turquoise, deeper for better contrast */
+    --neutral-color1: #F5F5F5; /* Soft sandstone white for backgrounds */
+    --neutral-color2: #4F3D27; /* Rich earthy brown for text or accents */
+    --accent-color1: #A0522D; 
     --header-font: 'Playfair Display', serif;
     --body-font: 'Lato', sans-serif;
 }
@@ -203,7 +203,7 @@ button:hover {
 
 #directory.list-view .member-card {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 1fr 1fr 1fr 2fr;
     gap: 1rem;
     width: calc(100% - 2rem);
     /* Add space for padding on both sides */
@@ -232,14 +232,13 @@ button:hover {
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-
 /* styling for website column */
-#directory.list-view .member-card .website a {
+#directory.list-view .member-card a {
     color: var(--secondary-color);
     text-decoration: none;
     overflow: hidden;
     display: inline-block;
-    padding-top: 1rem;
+    padding-top: 2rem;
     /* Add padding for the entire website column */
     max-width: 100%;
     /* Ensure the URL fits within its column */

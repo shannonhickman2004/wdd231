@@ -77,16 +77,16 @@ const displayBusinesses = (businesses, view) => {
         image.setAttribute('loading', 'lazy');
 
         const address = document.createElement('p');
-        address.textContent = `Address: ${business.address}`;
+        address.textContent = business.address;
 
         const phone = document.createElement('p');
-        phone.textContent = `Phone: ${business.phone}`;
+        phone.textContent = business.phone;
 
         const website = document.createElement('a');
-        website.textContent = business.website; 
+        website.textContent = business.website;
         website.setAttribute('href', business.website);
         website.setAttribute('target', '_blank');
-        website.classList.add('website-link'); 
+        website.classList.add('website-link');
 
         // Append elements to card
         card.appendChild(image);
