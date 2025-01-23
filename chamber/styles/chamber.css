@@ -44,10 +44,15 @@ header {
     height: auto;
 }
 
+h1 {
+    text-align: center;
+}
+
 .logo-container h1 {
     font-size: 2rem;
     margin: 0;
     font-family: var(--header-font, serif);
+    text-align: center;
 }
 
 /* Navigation Styling */
