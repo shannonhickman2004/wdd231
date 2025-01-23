@@ -20,13 +20,6 @@ const directory = document.querySelector('#directory');
 hamButton.addEventListener('click', () => {
     navigation.classList.toggle('open');
     hamButton.classList.toggle('open');
-
-    // Adjust the directory's margin to always be below the menu
-    if (navigation.classList.contains('open')) {
-        directory.style.marginTop = `${navigation.offsetHeight + 16}px`;
-    } else {
-        directory.style.marginTop = '1rem';
-    }
 });
 
 // Close the menu when a navigation link is clicked (for mobile view)
@@ -35,7 +28,6 @@ navLinks.forEach(link => {
     link.addEventListener('click', () => {
         navigation.classList.remove('open');
         hamButton.classList.remove('open');
-        directory.style.marginTop = '1rem'; // Reset margin
     });
 });
 
@@ -106,3 +98,45 @@ document.getElementById('list-view').addEventListener('click', () => displayBusi
 
 // Call the function to fetch and display data
 getBusinessData(url);
+
+// Select the spotlight container
+const spotlightContainer = document.querySelector('.spotlight-container');
+
+// Fetch member data from the JSON file
+async function fetchMemberData() {
+    try {
+        const response = await fetch('members.json'); // Path to your JSON file
+        if (response.ok) {
+            const members = await response.json();
+            displaySpotlights(members);
+        } else {
+            throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+    } catch (error) {
+        console.error('Fetch Error:', error);
+    }
+}
+
+// Filter and display spotlight members
+function displaySpotlights(members) {
+    const eligibleMembers = members.filter(member => 
+        member.membershipLevel === "Gold" || member.membershipLevel === "Silver"
+    );
+    const randomMembers = eligibleMembers.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+    randomMembers.forEach(member => {
+        const spotlightCard = `
+            <div class="spotlight-card">
+                <img src="images/${member.image}" alt="${member.name}">
+                <h3>${member.name}</h3>
+                <p>${member.address}</p>
+                <p>${member.phone}</p>
+                <a href="${member.website}" target="_blank">Visit Website</a>
+            </div>
+        `;
+        spotlightContainer.innerHTML += spotlightCard;
+    });
+}
+
+// Initialize spotlight display
+fetchMemberData();
