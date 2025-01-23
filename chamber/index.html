@@ -14,11 +14,12 @@
     <link rel="icon" href="images/favicon.ico">
     <link rel="stylesheet" href="styles/normalize.css">
     <link rel="stylesheet" href="styles/chamber.css">
+    <link rel="stylesheet" href="styles/chambersmall.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&display=swap"
         rel="stylesheet">
-    <script src="scripts/chamber.js" defer></script>
     <script src="scripts/chamberweather.js" defer></script>
+    <script src="scripts/chamber.js" defer></script>
 </head>
 
 <body>
@@ -36,43 +37,65 @@
         </nav>
     </header>
     <main>
-        <!-- Hero Section -->
-        <section id="hero">
+        <div class="hero">
             <picture>
                 <source srcset="images/hero-large.webp" media="(min-width: 768px)">
                 <source srcset="images/hero-small.webp" media="(max-width: 767px)">
                 <img src="images/hero-default.webp" alt="Scenic view of Blanding" />
             </picture>
-            <div class="hero-content">
-                <h1>Welcome to the Blanding Chamber of Commerce</h1>
-                <p>Connecting businesses and communities in Blanding, Utah.</p>
-                <a href="join.html" class="cta-button">Join the Chamber</a>
-            </div>
+            <a href="join.html" class="cta-button">Join</a>
+        </div>
+        <h1>Home</h1>
+        </div>
         </section>
 
-        <!-- Weather Section -->
-        <section id="weather">
-            <h2>Current Weather</h2>
-            <div id="current-weather">
-                <p>Loading current weather...</p>
-            </div>
-            <div id="forecast">
-                <h3>3-Day Forecast</h3>
-                <p>Loading forecast...</p>
-            </div>
+        <section class="main-grid">
+            <!-- Events Section -->
+            <section id="events" class="card">
+                <h2>Upcoming Events</h2>
+                <div id="eventinfo">
+                    <p>No upcoming events at the moment.</p>
+                </div>
+            </section>
+
+            <!-- Current Weather Section -->
+            <section id="weather" class="card">
+                <h2>Current Weather</h2>
+                <div class="weather-overview">
+                    <img id="weather-icon" alt="Weather icon">
+                    <p id="current-description">Partly Cloudy</p>
+                </div>
+                <div class="weather-details">
+                    <p><strong>Temperature:</strong> <span id="current-temp">72°F</span></p>
+                    <p><strong>High:</strong> <span id="high-temp">75°F</span></p>
+                    <p><strong>Low:</strong> <span id="low-temp">65°F</span></p>
+                    <p><strong>Humidity:</strong> <span id="humidity">45%</span></p>
+                    <p><strong>Sunrise:</strong> <span id="sunrise">6:15 AM</span></p>
+                    <p><strong>Sunset:</strong> <span id="sunset">8:45 PM</span></p>
+                </div>
+            </section>
+
+            <!-- Weather Forecast Section -->
+            <section id="forecast" class="card">
+                <h2>Weather Forecast</h2>
+                <div id="forecast-container">
+                    <div class="forecast-card">
+                        <p><strong>Day 1:</strong> 73°F, Sunny</p>
+                    </div>
+                    <div class="forecast-card">
+                        <p><strong>Day 2:</strong> 68°F, Partly Cloudy</p>
+                    </div>
+                    <div class="forecast-card">
+                        <p><strong>Day 3:</strong> 70°F, Rain</p>
+                    </div>
+                </div>
+            </section>
         </section>
 
-        <!-- Events Section -->
-        <section id="events">
-            <h2>Upcoming Events</h2>
-            <p>No events currently scheduled. Check back soon!</p>
-        </section>
-
-        <!-- Spotlights Section -->
-        <section id="spotlights">
+        <section id="members" class="members-grid">
             <h2>Member Spotlights</h2>
             <div class="spotlight-container">
-                <p>Loading spotlight members...</p>
+                <!-- Spotlight cards will be dynamically injected here -->
             </div>
         </section>
     </main>

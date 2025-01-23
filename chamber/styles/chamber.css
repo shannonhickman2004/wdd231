@@ -1,12 +1,8 @@
 :root {
     --primary-color: #7A2E1C;
-    /* Deep burnt sienna (similar to red rock hues) */
     --secondary-color: #298B8D;
-    /* Indian turquoise, deeper for better contrast */
     --neutral-color1: #F5F5F5;
-    /* Soft sandstone white for backgrounds */
     --neutral-color2: #4F3D27;
-    /* Rich earthy brown for text or accents */
     --accent-color1: #A0522D;
     --header-font: 'Playfair Display', serif;
     --body-font: 'Lato', sans-serif;
@@ -149,9 +145,7 @@ button:hover {
     padding: 1rem;
     box-sizing: border-box;
     height: 100%;
-    /* Enforce consistent height */
     min-height: 300px;
-    /* Set a minimum height */
     box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
     border: 1px solid var(--secondary-color);
     border-radius: 8px;
@@ -204,10 +198,8 @@ button:hover {
 #directory.list-view {
     display: flex;
     flex-direction: column;
-    /* Stack rows vertically */
     padding: 1rem;
     align-items: center;
-    /* Center all rows in the container */
 }
 
 #directory.list-view .member-card {
@@ -249,9 +241,7 @@ button:hover {
     overflow: hidden;
     display: inline-block;
     padding-top: 2rem;
-    /* Add padding for the entire website column */
     max-width: 100%;
-    /* Ensure the URL fits within its column */
 }
 
 #directory.list-view .member-card .website a:hover {
@@ -265,60 +255,265 @@ button:hover {
 }
 
 /* Added Styles for Hero Section of Index Page*/
-#hero {
+.hero {
     position: relative;
-    text-align: center;
-    padding: 0 1rem;
-    color: var(--neutral-color1);
-    margin-bottom: 2rem;
-}
-
-#hero picture img {
     width: 100%;
-    height: auto;
+    height: 70vh;
+    max-height: 500px;
+    overflow: hidden;
 }
 
-.hero-content {
+.hero picture {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
-.hero-content h1 {
-    font-family: var(--header-font);
-    font-size: 2.5rem;
-    margin: 0 auto;
+.hero picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .cta-button {
-    margin-top: 1rem;
-    padding: 0.75rem 1.5rem;
-    background-color: var(--primary-color);
-    color: var(--neutral-color1);
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 2;
+    padding: 1rem 2rem;
+    background-color: var(--primary-color, #7A2E1C);
+    color: var(--neutral-color1, #FFF);
     text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease-in-out;
+    font-size: 1.25rem;
+    border-radius: 8px;
+    transition: background-color 0.3s;
 }
 
+.cta-button:hover {
+    background-color: var(--accent-color1, #A0522D);
+    color: var(--neutral-color1, #FFF);
+}
+
+
+.card {
+    background-color: var(--neutral-color1);
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 1rem;
+    text-align: center;
+}
+
+.card img {
+    margin-bottom: 0.5rem;
+}
+
+.weather-details p {
+    margin: 0.3rem 0;
+    line-height: 1;
+    font-size: 0.9rem;
+    padding: 0;
+
+}
+
+/* Main Grid Layout */
+.main-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.card {
+    background-color: var(--neutral-color1);
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    padding: 0;
+
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card p {
+    line-height: 1;
+    margin: 0.5rem 0;
+    padding: 0;
+}
+
+.card-header {
+    background-color: var(--card-header-bg);
+}
+
+
+#events,
+#weather,
 #forecast {
+    height: 90%;
+    overflow: hidden;
+    padding: 0.5rem;
+}
+
+#forecast-container {
     display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 1rem;
-    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 0.5rem;
+    justify-content: space-around;
+    padding: 0.5rem;
 }
 
 .forecast-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    text-align: center;
+}
+
+.forecast-card img {
+    width: 50px;
+    height: 50px;
+    margin: 0.3rem 0;
+}
+
+.forecast-card p {
+    margin: 0.2rem 0;
+    line-height: 1.2;
+    font-size: 0.9rem;
+}
+
+
+/* Weather Overview Section */
+.weather-overview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+#weather-icon {
+    margin: 0 auto;
+    display: block;
+    max-width: 100px;
+    height: auto;
+}
+
+/* Current Weather Card */
+
+#weather-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.weather-overview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+#weather-icon {
+    width: 100px;
+    height: 100px;
+}
+
+.weather-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.weather-item img {
+    width: 24px;
+    height: 24px;
+}
+
+
+
+/* Spotlight Grid Layout */
+.spotlight-grid {
+    margin-top: 2rem;
+}
+
+.spotlight-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    justify-items: center;
+    margin-top: 1rem;
+}
+
+/* Spotlight Card Styling */
+
+.grid-view {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* 3 columns */
+    gap: 1.5rem;
+    /* Space between cards */
+    padding: 1rem;
+    /* Padding around the grid */
+}
+
+.member-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+    background-color: var(--neutral-color1);
     border: 1px solid var(--secondary-color);
     border-radius: 8px;
-    background-color: var(--neutral-color1);
-    padding: 1rem;
-    text-align: center;
-    width: 150px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
+
+h2 {
+    text-align: center;
+}
+.spotlight-card {
+    background-color: var(--neutral-color1);
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 300px;
+}
+
+.spotlight-card img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+}
+
+.spotlight-card h3 {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
+.spotlight-card p {
+    margin: 0.5rem 0;
+}
+
+.spotlight-card a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.spotlight-card a:hover {
+    text-decoration: underline;
+}
+
 
 /* Footer Styling */
 footer {
@@ -368,4 +563,3 @@ footer {
 .author p {
     margin: 0.5rem 0;
 }
-
