@@ -119,7 +119,7 @@ async function fetchMemberData() {
 
 // Filter and display spotlight members
 function displaySpotlights(members) {
-    const eligibleMembers = members.filter(member => 
+    const eligibleMembers = members.filter(member =>
         member.membershipLevel === "Gold" || member.membershipLevel === "Silver"
     );
     const randomMembers = eligibleMembers.sort(() => 0.5 - Math.random()).slice(0, 3);

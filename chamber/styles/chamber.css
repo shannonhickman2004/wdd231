@@ -22,7 +22,7 @@ body {
 header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: left;
     background-color: var(--primary-color, #8A320E);
     color: var(--neutral-color1, #FFFFFF);
     padding: 1.5rem 2rem;
@@ -44,6 +44,10 @@ h1 {
     text-align: center;
 }
 
+h2 {
+    text-align: center;
+}
+
 .logo-container h1 {
     font-size: 2rem;
     margin: 0;
@@ -54,7 +58,9 @@ h1 {
 /* Navigation Styling */
 .navigation {
     display: flex;
+    align-items: center;
     gap: 2rem;
+    margin-left: auto;
     transition: all 0.3s ease-in-out;
 }
 
@@ -161,8 +167,6 @@ button:hover {
     margin-bottom: 0.5rem;
 }
 
-
-
 #directory .member-card img {
     width: 100%;
     max-width: 100px;
@@ -171,8 +175,6 @@ button:hover {
     margin-bottom: 1rem;
     border-radius: 5px;
 }
-
-
 
 #directory.grid-view .member-card:hover {
     box-shadow: 0px 6px 8px #8A320E;
@@ -192,7 +194,6 @@ button:hover {
     text-decoration: underline;
     color: var(--primary-color, #8A320E);
 }
-
 
 /* List View Styling */
 #directory.list-view {
@@ -296,7 +297,6 @@ button:hover {
     color: var(--neutral-color1, #FFF);
 }
 
-
 .card {
     background-color: var(--neutral-color1);
     border: 1px solid var(--secondary-color);
@@ -316,7 +316,6 @@ button:hover {
     line-height: 1;
     font-size: 0.9rem;
     padding: 0;
-
 }
 
 /* Main Grid Layout */
@@ -355,6 +354,79 @@ button:hover {
     padding: 0.5rem;
 }
 
+/* Grid Layout for Spotlight Container */
+.spotlight-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* 3 cards per row */
+    gap: 1.5rem;
+    /* Space between cards */
+    padding: 1rem;
+    /* Padding around the grid */
+}
+
+/* Spotlight Card Styling */
+.spotlight-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+    background-color: var(--neutral-color1);
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    /* Rounded corners */
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
+    /* Card shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 300px;
+    /* Fixed height for uniformity */
+}
+
+/* Card Image Styling */
+.spotlight-card img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    /* Rounded edges for images */
+}
+
+/* Card Title Styling */
+.spotlight-card h3 {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+/* Card Text Styling */
+.spotlight-card p {
+    margin: 0.3rem 0;
+    font-size: 1rem;
+}
+
+/* Card Link Styling */
+.spotlight-card a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.spotlight-card a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+    .spotlight-container {
+        grid-template-columns: 1fr;
+        /* Single column layout for small screens */
+    }
+}
+
+/* Forcast Card Styling */
 #forecast-container {
     display: flex;
     flex-direction: row;
@@ -385,7 +457,6 @@ button:hover {
     line-height: 1.2;
     font-size: 0.9rem;
 }
-
 
 /* Weather Overview Section */
 .weather-overview {
@@ -433,87 +504,6 @@ button:hover {
     width: 24px;
     height: 24px;
 }
-
-
-
-/* Spotlight Grid Layout */
-.spotlight-grid {
-    margin-top: 2rem;
-}
-
-.spotlight-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    justify-items: center;
-    margin-top: 1rem;
-}
-
-/* Spotlight Card Styling */
-
-.grid-view {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    /* 3 columns */
-    gap: 1.5rem;
-    /* Space between cards */
-    padding: 1rem;
-    /* Padding around the grid */
-}
-
-.member-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 1rem;
-    background-color: var(--neutral-color1);
-    border: 1px solid var(--secondary-color);
-    border-radius: 8px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-    text-align: center;
-}
-.spotlight-card {
-    background-color: var(--neutral-color1);
-    border: 1px solid var(--secondary-color);
-    border-radius: 8px;
-    padding: 1rem;
-    text-align: center;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 300px;
-}
-
-.spotlight-card img {
-    width: 100px;
-    height: 100px;
-    object-fit: contain;
-    margin-bottom: 1rem;
-    border-radius: 5px;
-}
-
-.spotlight-card h3 {
-    font-size: 1.2rem;
-    color: var(--primary-color);
-}
-
-.spotlight-card p {
-    margin: 0.5rem 0;
-}
-
-.spotlight-card a {
-    color: var(--secondary-color);
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.spotlight-card a:hover {
-    text-decoration: underline;
-}
-
 
 /* Footer Styling */
 footer {

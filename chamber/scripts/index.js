@@ -1,18 +1,34 @@
 // Set the current year dynamically
 const currentYear = new Date().getFullYear();
-document.getElementById("currentYear")?.textContent = currentYear;
+const currentYearElement = document.getElementById("currentYear");
+if (currentYearElement) {
+    currentYearElement.textContent = currentYear;
+}
 
 // Set the last modified date dynamically
 const lastModifiedDate = new Date(document.lastModified);
-document.getElementById("lastModified")?.textContent = `Last Updated: ${lastModifiedDate.toLocaleDateString()}`;
+const lastModifiedElement = document.getElementById("lastModified");
+if (lastModifiedElement) {
+    lastModifiedElement.textContent = `Last Updated: ${lastModifiedDate.toLocaleDateString()}`;
+}
 
 // Hamburger Menu Functionality
 const hamButton = document.querySelector('#menu');
 const navigation = document.querySelector('.navigation');
+const directory = document.querySelector('#directory');
 
-hamButton?.addEventListener('click', () => {
+hamButton.addEventListener('click', () => {
     navigation.classList.toggle('open');
     hamButton.classList.toggle('open');
+});
+
+// Close the menu when a navigation link is clicked (for mobile view)
+const navLinks = document.querySelectorAll('.navigation a');
+navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        navigation.classList.remove('open');
+        hamButton.classList.remove('open');
+    });
 });
 
 // Fetch Business Data and Process
@@ -27,9 +43,9 @@ const getBusinessData = async (url) => {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        businessesData = data; // Save all the businesses
-        displayBusinesses(businessesData); // Display in grid view
-        displaySpotlights(businessesData); // Use the same data for spotlights
+        businessesData = data;
+        displayBusinesses(businessesData); 
+        displaySpotlights(businessesData); 
     } catch (error) {
         console.error("Error fetching data:", error);
     }
@@ -37,46 +53,49 @@ const getBusinessData = async (url) => {
 
 // Display Businesses in Grid View
 const displayBusinesses = (businesses) => {
-    const directory = document.getElementById('directory'); // Ensure directory element exists
-    directory.innerHTML = ""; // Clear previous content
-    directory.classList.add('grid-view'); // Add the grid view class
+    const directory = document.getElementById('directory'); 
+    if (directory) {
+        directory.innerHTML = ""; // Clear previous content
+        directory.classList.add('grid-view'); 
 
-    businesses.forEach((business) => {
-        // Create card elements
-        const card = document.createElement('section');
-        card.className = 'member-card';
+        businesses.forEach((business) => {
+            // Create card elements
+            const card = document.createElement('section');
+            card.className = 'member-card';
 
-        const name = document.createElement('h2');
-        name.textContent = business.name;
+            const name = document.createElement('h2');
+            name.textContent = business.name;
 
-        const image = document.createElement('img');
-        image.setAttribute('src', `images/${business.image}`);
-        image.setAttribute('alt', `Logo of ${business.name}`);
-        image.setAttribute('loading', 'lazy');
+            const image = document.createElement('img');
+            image.setAttribute('src', `images/${business.image}`);
+            image.setAttribute('alt', `Logo of ${business.name}`);
+            image.setAttribute('loading', 'lazy');
 
-        const address = document.createElement('p');
-        address.textContent = business.address;
+            const address = document.createElement('p');
+            address.textContent = business.address;
 
-        const phone = document.createElement('p');
-        phone.textContent = business.phone;
+            const phone = document.createElement('p');
+            phone.textContent = business.phone;
 
-        const website = document.createElement('a');
-        website.textContent = business.website;
-        website.setAttribute('href', business.website);
-        website.setAttribute('target', '_blank');
-        website.classList.add('website-link');
+            const website = document.createElement('a');
+            website.textContent = business.website;
+            website.setAttribute('href', business.website);
+            website.setAttribute('target', '_blank');
+            website.classList.add('website-link');
 
-        // Append elements to card
-        card.appendChild(image);
-        card.appendChild(name);
-        card.appendChild(address);
-        card.appendChild(phone);
-        card.appendChild(website);
+            // Append elements to card
+            card.appendChild(image);
+            card.appendChild(name);
+            card.appendChild(address);
+            card.appendChild(phone);
+            card.appendChild(website);
 
-        // Add card to the DOM
-        directory.appendChild(card);
-    });
+            // Add card to the DOM
+            directory.appendChild(card);
+        });
+    }
 };
+
 
 // Filter and Display Spotlight Members
 const displaySpotlights = (members) => {
