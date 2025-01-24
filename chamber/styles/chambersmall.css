@@ -86,7 +86,7 @@
     .main-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 2.0rem; 
+        gap: 2.0rem;
         padding: 0 1rem;
     }
 
@@ -94,20 +94,22 @@
     #weather,
     #forecast {
         padding: 1rem;
-        margin: 0; /* Reset margin to prevent conflict with grid gap */
+        margin: 0;
+        /* Reset margin to prevent conflict with grid gap */
         border-radius: 8px;
     }
 
     .spotlight-container {
-        grid-template-columns: 1fr; /* Stack cards vertically */
+        grid-template-columns: 1fr;
+        /* Stack cards vertically */
     }
 
     .spotlight-container .spotlight-card,
     .spotlight-container .forecast-card {
-        width: 100%; /* Full width for small screens */
-        height: auto; /* Let height adjust naturally on small screens */
+        width: 100%;
+        height: auto;
     }
-}
+
 
     header {
         padding: 1rem;
