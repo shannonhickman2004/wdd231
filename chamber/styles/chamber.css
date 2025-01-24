@@ -22,6 +22,7 @@ body {
 header {
     display: flex;
     justify-content: space-between;
+
     background-color: var(--primary-color, #8A320E);
     color: var(--neutral-color1, #FFFFFF);
     padding: 1.5rem 2rem;
