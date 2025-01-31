@@ -76,7 +76,7 @@ if (urlParts.length > 1) {
         return result;
     }
 
-    // Inject the form data into the #results section
+    // Inject the form data into the results section
     const showInfo = document.querySelector('#results');
     showInfo.innerHTML = `
         <h2>Membership Application Details</h2>
