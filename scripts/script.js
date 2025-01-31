@@ -36,6 +36,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const courseList = document.getElementById("course-list");
     const filterButtons = document.querySelectorAll(".filter-buttons button");
     const totalCreditsElement = document.getElementById("total-credits");
+    const courseDetails = document.getElementById("course-details");
+
+    // Function to display the modal with course details
+    function displayCourseDetails(course) {
+        courseDetails.innerHTML = '';
+        courseDetails.innerHTML = `
+            <button id="closeModal">❌</button>
+            <h2>${course.code}</h2>
+            <h3>${course.completed ? "Completed" : "Not Completed"}</h3>
+            <p><strong>Credits:</strong> ${course.credits}</p>
+            <p><strong>Description:</strong> Example description for ${course.code}</p>
+        `;
+
+        // Show the modal
+        courseDetails.showModal();
+
+        // Close modal functionality
+        const closeModal = document.getElementById("closeModal");
+        closeModal.addEventListener("click", () => {
+            courseDetails.close();
+        });
+
+        // Close the modal when clicking outside of it
+        courseDetails.addEventListener("click", (event) => {
+            if (event.target === courseDetails) {
+                courseDetails.close();
+            }
+        });
+    }
 
     // Function to display courses
     const displayCourses = (filter = "all") => {
@@ -49,6 +78,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 courseCard.textContent = `${course.code} (${course.credits} credits)`;
                 courseCard.className = `course-card ${course.completed ? "completed" : ""}`;
                 courseCard.setAttribute("data-credits", course.credits); // Add data-credits attribute
+
+                // Add click event listener to show modal
+                courseCard.addEventListener("click", () => {
+                    displayCourseDetails(course);
+                });
+
                 courseList.appendChild(courseCard);
             });
 
@@ -84,3 +119,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize display
     displayCourses();
 });
+
+

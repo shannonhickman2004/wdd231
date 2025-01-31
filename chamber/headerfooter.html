@@ -5,25 +5,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blanding Chamber of Commerce</title>
-    <meta name="description" content="WDD 231: Web Frontend Development I Chamber of Commerce">
+    <meta name="description" content="Chamber of Commerce for Blanding, UT">
     <meta name="author" content="Shannon Hickman">
-    <meta property="og:title" content="Business Directory - Blanding Chamber of Commerce">
+    <meta property="og:title" content="Join Page- Blanding Chamber of Commerce">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="images/blanding.png">
+    <meta property="og:image" content="../images/cedars.jpg">
     <meta property="og:url" content="https://shannonhickman2004.github.io/wdd231/chamber/directory.html">
     <link rel="icon" href="images/favicon.ico">
     <link rel="stylesheet" href="styles/normalize.css">
     <link rel="stylesheet" href="styles/chamber.css">
+    <link rel="stylesheet" href="styles/chambersmall.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&display=swap"
         rel="stylesheet">
-    <script src="scripts/chamber.js" defer></script>
+    <script src="scripts/thanks.js" defer></script>
+    <script src="scripts/index.js" defer></script>
 </head>
 
 <body>
     <header>
         <div class="logo-container">
-            <img src="images/blandingnew.webp" alt="Blanding Logo" class="logo">
+            <img src="images/blandingnew.webp" alt="Blanding Chamber Logo" class="logo">
             <h1>Blanding Chamber of Commerce</h1>
         </div>
         <button type="button" id="menu" aria-label="Toggle Menu"></button>
@@ -34,39 +36,66 @@
             <a href="join.html" class="nav-link">Join</a>
         </nav>
     </header>
-</body>
+    <main>
 
-<main>
+        <h1>Join Blanding Chamber of Commerce</h1>
 
-</main>
+        <form method="GET" action="thanks.html" class="designOne">
+        <label>First Name <input type="text" name="first" required autocomplete="given-name" title="Your First Name"></label>
+        <label>Last Name <input type="text" name="last" required autocomplete="family-name" title="Your Last Name"></label>
+        <label>Organizational Title<input type="text" name="title" required autocomplete="organizational-title" pattern="^[A-Za-z\s-]{7,}$" title="Please enter a title with at least 7 characters using only letters, hyphens, and spaces"></label>
+        <label>Cell Phone <input type="tel" name="phone"  autocomplete="tel" title="A Phone Number with dashes" placeholder="987-555-1234"></label>
+        <label>Email <input type="email" name="email" required placeholder="example@gmail.com"  title="Your Email" autocomplete="email"></label>
+        <label>Business/Organization Name <input type="text" name="org" required autocomplete="organization" title="Your Organizational/Business Title"></label>
+  
 
-<footer>
-    <div class="footer-container">
-        <div class="businessinfo">
-            <p>Blanding Chamber of Commerce</p>
-            <p>123 Main Street</p>
-            <p>Blanding, UT 84511</p>
-            <p>Phone: (555) 555-5555</p>
+        <h3>Membership Level</h3>
+        <label><input type="radio" name="membership" value="NP" checked> NP Membership</label>
+        <label><input type="radio" name="membership" value="Bronze"> Bronze Membership</label>
+        <label><input type="radio" name="membership" value="Silver"> Silver membership</label>
+        <label><input type="radio" name="membership" value="Gold"> Gold Membership</label>
+
+        <label>Business/Organization Description</label>
+        <textarea id="description" name="description" rows="4" required 
+                  placeholder="Description" 
+                  title="Describe your business or organization, including its purpose and services"></textarea>
+        
+
+        <h3>Date and Location</h3>
+        <label>Date <input type="date" name="fecha" required></label>
+
+        <input type="submit" value="Join the Chamber">
+    </form>
+
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="businessinfo">
+                <p>Blanding Chamber of Commerce</p>
+                <p>123 Main Street</p>
+                <p>Blanding, UT 84511</p>
+                <p>Phone: (555) 555-5555</p>
+            </div>
+
+            <div class="sociallinks">
+                <a href="https://facebook.com">
+                    <img src="images/facebook.webp" alt="Facebook" height="60">
+                </a>
+                <a href="https://instagram.com">
+                    <img src="images/instagram.webp" alt="Instagram" height="60">
+                </a>
+                <a href="https://twitter.com">
+                    <img src="images/twitter.webp" alt="Twitter" height="60">
+                </a>
+            </div>
+
+            <div class="author">
+                <p>Shannon Hickman | Blanding Chamber of Commerce</p>
+                <p>&copy; <span id="currentYear"></span> | Last Updated: <span id="lastModified"></span></p>
+            </div>
         </div>
-
-        <div class="sociallinks">
-            <a href="https://facebook.com">
-                <img src="images/facebook.png" alt="Facebook" height="60">
-            </a>
-            <a href="https://instagram.com">
-                <img src="images/instagram.png" alt="Instagram" height="60">
-            </a>
-            <a href="https://twitter.com">
-                <img src="images/twitter.png" alt="Twitter" height="60">
-            </a>
-        </div>
-
-        <div class="author">
-            <p>Shannon Hickman | Blanding Chamber of Commerce</p>
-            <p>&copy; <span id="currentYear"></span> | Last Updated: <span id="lastModified"></span></p>
-        </div>
-    </div>
-</footer>
+    </footer>
 </body>
 
 </html>

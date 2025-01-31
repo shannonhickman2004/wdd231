@@ -7,6 +7,28 @@
         margin-top: 1rem;
     }
 
+    .form-grid-layout {
+        display: grid;
+        grid-template-columns: 1fr;;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    /* Form styling remains the same */
+form {
+    grid-column: 1;
+    margin: 1rem 2%;
+}
+
+/* Membership cards styling */
+.cards-container {
+    grid-column: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .5rem;
+    align-items: center;
+}
+
     #directory.grid-view .member-card {
         width: 100%;
         max-width: 400px;
@@ -129,5 +151,22 @@
 
     .sociallinks {
         justify-content: center;
+    }
+
+    .form-grid-layout {
+        grid-template-columns: 1fr;    /* Single-column layout */
+        gap: 1rem;                     /* Adjust spacing */
+    }
+
+    .cards-container {
+        display: flex;
+        flex-direction: column;        /* Stack cards vertically */
+        align-items: center;
+        gap: 1rem;                     /* Space between cards */
+    }
+
+    .card {
+        width: 90%;                    /* Make cards fit the screen */
+        max-width: 300px;
     }
 }

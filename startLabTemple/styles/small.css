@@ -1,0 +1,72 @@
+* {
+    box-sizing: border-box;
+}
+
+#mydialog div {
+    display: grid;
+    grid-template-columns: auto 44px;
+    background-color: #ddd;
+    padding: 5px;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header,
+nav,
+main,
+footer {
+    width: 90%;
+    margin: 0 auto;
+    padding: 10px;
+    background-color: #ddd;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+#showHere {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+#showHere img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#showHere img:hover {
+    transform: scale(1.05);
+}
+
+
+#mydialog div {
+    display: grid;
+    grid-template-columns: auto 44px;
+    background-color: #ddd;
+    padding: 5px;
+    border-bottom: #aaa 1px solid;
+}
+
+#mydialog h2 {
+    margin: 0;
+    color: #275690;
+}
+
+#mydialog p {
+    padding: 10px;
+    color: #375170
+}
+
+::backdrop {
+    background-color: rgba(255, 255, 255, .75);
+}
