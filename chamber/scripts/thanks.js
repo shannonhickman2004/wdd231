@@ -89,4 +89,4 @@ if (urlParts.length > 1) {
         <p><strong>Description:</strong> ${show('description')}</p>
         <p><strong>Submitted on:</strong> ${show('timestamp')}</p>
     `;
-}
+} 

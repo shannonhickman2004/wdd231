@@ -576,14 +576,9 @@ select {
     border-left-color: var(--accent-color1);
     font-size: 1rem;
     color: var(--neutral-color2);
-    width: 100%;
+    width: 90%;
     box-sizing: border-box;
     resize: vertical;
-}
-
-/* Other input states */
-input:required {
-    border-left-color: var(--neutral-color1);
 }
 
 input:focus,
@@ -594,7 +589,7 @@ textarea:focus {
 }
 
 input:required:valid {
-    border-left-color: green;
+    border-left-color: var(--secondary-color);
 }
 
 input[type=submit] {
