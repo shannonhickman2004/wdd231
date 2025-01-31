@@ -688,7 +688,30 @@ label {
         background-color: #ffe4b3;   /* Soft pulsing color */
     }
 }
+/*Styling for thank you page*/
+/* Results Section Styling */
+#results {
+    background-color: var(--neutral-color1, #f5f5f5);
+    padding: 1rem;
+    border: 1px solid var(--primary-color, #7A2E1C);
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 2rem auto;
+    font-family: var(--body-font, sans-serif);
+}
 
+#results h2 {
+    font-size: 1.5rem;
+    color: var(--primary-color, #7A2E1C);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+#results p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--neutral-color2, #4F3D27);
+}
 
 
 /* Footer Styling */

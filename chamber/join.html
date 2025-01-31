@@ -42,14 +42,16 @@
             <!-- Form on the left side -->
             <div class="form-layout">
                 <h1>Join Blanding Chamber of Commerce</h1>
-                <form method="GET" action="thanks.html" class="designOne">
+                <form method="GET" action="thankyou.html" class="designOne">
                     <label>First Name <input type="text" name="first" required autocomplete="given-name"
                             title="Your First Name"></label>
                     <label>Last Name <input type="text" name="last" required autocomplete="family-name"
                             title="Your Last Name"></label>
-                    <label>Organizational Title <input type="text" name="title" required
-                            autocomplete="organizational-title" pattern="^[A-Za-z\s-]{7,}$"
-                            title="Please enter a title with at least 7 characters using only letters, hyphens, and spaces"></label>
+                    <label>Organizational Title
+                        <input type="text" name="title" required autocomplete="organization-title"
+                            pattern="^[A-Za-z\s\-]{7,}$"
+                            title="Please enter a title with at least 7 characters using only letters, hyphens, and spaces">
+                    </label>
                     <label>Cell Phone <input type="tel" name="phone" autocomplete="tel"
                             title="A Phone Number with dashes" placeholder="987-555-1234"></label>
                     <label>Email <input type="email" name="email" required placeholder="example@gmail.com"
@@ -67,8 +69,7 @@
                     <textarea id="description" name="description" rows="4" required placeholder="Description"
                         title="Describe your business or organization, including its purpose and services"></textarea>
 
-                    <h3>Date and Location</h3>
-                    <label>Date <input type="date" name="fecha" required></label>
+                    <input type="hidden" id="timestamp" name="timestamp">
 
                     <input type="submit" value="Join the Chamber">
                 </form>
