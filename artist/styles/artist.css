@@ -1,0 +1,751 @@
+:root {
+    --primary-color: #2E2E2E;   /* Dark warm gray with high contrast */
+    --secondary-color: #5A5A5A;  /* Darker slate gray for balance */
+    --neutral-color1: #F5F5F5;  /* Light neutral background */
+    --neutral-color2: #2E4239;  /* Deep brown for text */
+    --accent-color1: #7A2D35;  /* Warm autumn-inspired accent */
+    --header-font: 'Playfair Display', serif;
+    --body-font: 'Lato', sans-serif;
+}
+
+
+body {
+    font-family: var(--body-font);
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: var(--neutral-color1);
+    color: var(--neutral-color2);
+    overflow-x: hidden;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+
+    background-color: var(--primary-color);
+    color: var(--neutral-color1);
+    padding: 1.5rem 2rem;
+    position: relative;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo {
+    width: 100px;
+    height: auto;
+}
+
+h1 {
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+}
+
+.logo-container h1 {
+    font-size: 2rem;
+    margin: 0;
+    font-family: var(--header-font, serif);
+    text-align: center;
+}
+
+/* Navigation Styling */
+.navigation {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-left: auto;
+    transition: all 0.3s ease-in-out;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--neutral-color1);
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: color 0.3s, background-color 0.3s;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    background-color: #4A4A4A;
+    color: var(--neutral-color1);    
+}
+
+.nav-link.active {
+    background-color: var(--secondary-color);
+    color: var(--neutral-color1);
+}
+
+/* Hamburger Menu Button */
+#menu {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: var(--neutral-color1);
+    cursor: pointer;
+    z-index: 10;
+    position: relative;
+}
+
+#menu::before {
+    content: "☰";
+}
+
+#menu.open::before {
+    content: "✖";
+}
+
+/* View Toggle Buttons */
+#view-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+button {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--neutral-color2);
+    background-color: var(--neutral-color2);
+    color: var(--neutral-color1);
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--body-font);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+button:hover {
+    background-color: var(--accent-color1);
+    border-color: var(--accent-color1);
+    color: var(--neutral-color1); 
+}
+
+/* Business Directory Styling */
+#directory {
+    padding: 1rem;
+}
+
+/* Gallery page (gallery.html) - Standard size */
+.gallery-page.grid-view{
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+}
+
+.gallery-page .art-card h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.gallery-page .art-card p {
+    font-size: 1rem;
+}
+/* Grid View Styling */
+#directory.grid-view {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+#directory.grid-view .art-card {
+    flex: 1 1 calc(33.33% - 2rem);
+    max-width: calc(33.33% - 2rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    box-sizing: border-box;
+    height: 100%;
+    min-height: 300px;
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    background-color: var(--neutral-color1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#directory.grid-view .art-card h2 {
+    font-family: var(--header-font);
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+#directory .art-card img {
+    width: 100%;
+    height: 100%;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+}
+
+#directory.grid-view .art-card:hover {
+    box-shadow: 0px 6px 8px var(--accent-color1);
+    transform: translateY(-3px);
+}
+
+
+/* List View Styling */
+#directory.list-view {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    align-items: center;
+}
+
+#directory.list-view .art-card {
+    display: grid;
+    grid-template-columns: 2fr 1fr .75fr 1fr;
+    gap: 1rem;
+    width: calc(100% - 2rem);
+    /* Add space for padding on both sides */
+    max-width: 1200px;
+    padding: 1rem;
+    border: none;
+    box-shadow: none;
+    background-color: var(--neutral-color1);
+    color: var(--neutral-color2);
+}
+
+/* Zebra Striping */
+#directory.list-view .art-card:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+#directory.list-view .art-card:nth-child(even) {
+    background-color: #eeeeee;
+}
+
+/* Columns Styling */
+#directory.list-view .art-card div {
+    text-align: left;
+    padding: 0 1rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+
+/* Hide Images in List View */
+#directory.list-view .art-card img {
+    width: 100%;
+    height: 100%;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+}
+
+/* Added Styles for Hero Section of Index Page*/
+.hero {
+    position: relative;
+    width: 100%;
+    height: 70vh;
+    max-height: 500px;
+    overflow: hidden;
+}
+
+.hero picture {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.hero picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cta-button {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 2;
+    padding: 1rem 2rem;
+    background-color: var(--primary-color);
+    color: var(--neutral-color1);
+    text-decoration: none;
+    font-size: 1.25rem;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.cta-button:hover {
+    background-color: var(--accent-color1);
+    color: var(--neutral-color1);
+}
+
+.card {
+    background-color: var(--neutral-color1);
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 1rem;
+    text-align: center;
+    /* Adjust dimensions for a square shape */
+    height: 250px;
+    /* Adjust as needed for card size */
+    width: 250px;
+    /* Same as height to form a square */
+    min-width: 200px;
+    /* Ensures a minimum size */
+    display: flex;
+    /* Centering content */
+    flex-direction: column;
+    justify-content: center;
+    /* Animation setup */
+
+}
+
+.card img {
+    margin-bottom: 0.5rem;
+}
+
+.weather-details p {
+    margin: 0.3rem 0;
+    line-height: 1;
+    font-size: 0.9rem;
+    padding: 0;
+}
+
+/* Main Grid Layout */
+.main-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.card p {
+    line-height: 1;
+    margin: 0.5rem 0;
+    padding: 0;
+}
+
+.card-header {
+    background-color: var(--card-header-bg);
+}
+
+
+#events,
+#weather,
+#forecast {
+    height: 90%;
+    overflow: hidden;
+    padding: 0.5rem;
+}
+
+/* Grid Layout for Spotlight Container */
+.spotlight-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    /* Space between cards */
+    padding: 1.5rem;
+    /* Padding around the grid */
+}
+
+/* Spotlight Card Styling */
+.art-card, .spotlight-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+    background-color: var(--neutral-color1);
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    /* Rounded corners */
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
+    /* Card shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 400px;                    /* Increase card height for larger image */
+    max-width: 300px;                 /* Increase card width */
+    margin: 0 auto;
+}
+
+/* Card Image Styling */
+.art-card img, .spotlight-card img {
+    width: 100%;                      
+    height: 100;                   
+    margin-bottom: 0.5rem;
+    border-radius: 5px;
+}
+
+/* Card Title Styling */
+.spotlight-card h3 {
+    color: var(--primary-color);
+    font-size: 0.85rem;              /* Smaller font for details */
+    margin: 0.2rem 0;
+}
+
+/* Card Text Styling */
+.spotlight-card p {
+    margin: 0.3rem 0;
+    font-size: 1rem;
+}
+
+/* Card Link Styling */
+.spotlight-card a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.spotlight-card a:hover {
+    text-decoration: underline;
+    color: #FFFFFF;
+}
+
+/* Forcast Card Styling */
+#forecast-container {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    justify-content: space-around;
+    padding: 0.5rem;
+}
+
+.forecast-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    text-align: center;
+}
+
+.forecast-card img {
+    width: 50px;
+    height: 50px;
+    margin: 0.3rem 0;
+}
+
+.forecast-card p {
+    margin: 0.2rem 0;
+    line-height: 1.2;
+    font-size: 0.9rem;
+}
+
+/* Weather Overview Section */
+.weather-overview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+#weather-icon {
+    margin: 0 auto;
+    display: block;
+    max-width: 100px;
+    height: auto;
+}
+
+/* Current Weather Card */
+
+#weather-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.weather-overview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+#weather-icon {
+    width: 100px;
+    height: 100px;
+}
+
+.weather-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.weather-item img {
+    width: 24px;
+    height: 24px;
+}
+
+/* Form and card layout */
+.form-grid-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Form styling remains the same */
+form {
+    grid-column: 1 / 2;
+    margin: 1rem 2%;
+}
+
+/* Membership cards styling */
+.cards-container {
+    grid-column: 2 / 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .5rem;
+    align-items: center;
+}
+
+/* Card styling */
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+    width: 100%
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Existing form on join page label styles */
+form label {
+    display: block;
+    font-size: .8rem;
+    color: var(--primary-color);
+    padding-top: .2rem;
+    margin-bottom: 0.5rem;
+}
+
+form h3 {
+    font-size: .9rem;
+    color: var(--neutral-color2);
+    margin: 1.5rem 0 .2rem 0;
+    border-bottom: 1px solid var(--neutral-color1);
+}
+
+input[type=text],
+input[type=tel],
+input[type=date],
+input[type=email],
+textarea,
+select {
+    display: block;
+    margin: 0.1rem 0 1rem 0;
+    padding: 0.5rem;
+    border: 1px solid #000;
+    border-radius: 4px;
+    border-left-width: 5px;
+    border-left-color: var(--accent-color1);
+    font-size: 1rem;
+    color: var(--neutral-color2);
+    width: 90%;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+    border-color: black;
+    border-left-color: var(--secondary-color);
+    outline: none;
+}
+
+input:required:valid {
+    border-left-color: var(--secondary-color);
+}
+
+input[type=submit] {
+    border: none;
+    text-align: center;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 1rem;
+    padding: 0.75rem 1.5rem;
+    margin: 2rem 0;
+    font-size: 1.2rem;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* Autofill color */
+input:-webkit-autofill {
+    -webkit-text-fill-color: var(--neutral-color2);
+}
+
+/* Results section */
+#results {
+    background-color: var(--neutral-color1);
+    padding: 0 1rem;
+    border: 1px solid var(--primary-color);
+    border-radius: 6px;
+}
+
+/* Radio button styling */
+input[type="radio"] {
+    accent-color: var(--secondary-color);
+}
+
+/* Label styling */
+label {
+    color: var(--secondary-color);
+    font-size: 1rem;
+    margin-left: 1rem;
+}
+
+/* Initial Animation */
+.cards-container .card {
+    width: 90%;
+    height: 75%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    /* Initial animation properties */
+    opacity: 0;                     /* Start hidden */
+    transform: scale(0.85);         /* Start slightly smaller */
+    animation: fadeInGrow 1.5s ease-in-out forwards, colorPulse 4s 1s infinite alternate;
+}
+
+/* Hover effect */
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Keyframes for Fade-In and Scale Animation */
+@keyframes fadeInGrow {
+    0% {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+    60% {
+        opacity: 0.7;
+        transform: scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Keyframes for Color Pulse Animation */
+@keyframes colorPulse {
+    0% {
+        background-color: #fff;
+    }
+    100% {
+        background-color: #ffe4b3;   /* Soft pulsing color */
+    }
+}
+/*Styling for thank you page*/
+/* Results Section Styling */
+#results {
+    background-color: var(--neutral-color1);
+    padding: 1rem;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 2rem auto;
+    font-family: var(--body-font, sans-serif);
+}
+
+#results h2 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+#results p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--neutral-color2);
+}
+
+
+/* Footer Styling */
+footer {
+    background-color: var(--primary-color);
+    color: var(--neutral-color1);
+    padding: 2rem 1rem;
+    font-family: var(--body-font);
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center;
+}
+
+.businessinfo {
+    text-align: left;
+}
+
+.businessinfo p {
+    margin: 0.5rem 0;
+}
+
+.sociallinks {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.sociallinks a img {
+    height: 60px;
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+.sociallinks a img:hover {
+    transform: scale(1.1);
+}
+
+.author {
+    text-align: right;
+}
+
+.author p {
+    margin: 0.5rem 0;
+}
+
