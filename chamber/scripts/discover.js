@@ -49,21 +49,23 @@ displayItems(places);
 // Visitor Message Feature
 const visitorMessageElement = document.querySelector('#visitor-message');
 
+// Declare currentDate at the top to ensure it's defined before usage
+const currentDate = Date.now();
+
 // Function to calculate the number of days between two dates
 function getDaysBetweenDates(date1, date2) {
     const msToDays = 86400000; // 1000 ms/s * 60 s/m * 60 m/h * 24 h/day
     return Math.floor((date2 - date1) / msToDays);
 }
 
-// Get the current date and the last visit date from localStorage
-const currentDate = Date.now();
+// Retrieve the last visit date from localStorage
 const lastVisit = localStorage.getItem('lastVisit');
 
-// Determine which message to display
 if (!lastVisit) {
-    // First visit
+    // If this is the user's first visit
     visitorMessageElement.textContent = "Welcome! Let us know if you have any questions.";
 } else {
+    // Calculate the number of days since the last visit
     const daysSinceLastVisit = getDaysBetweenDates(Number(lastVisit), currentDate);
 
     if (daysSinceLastVisit < 1) {
@@ -74,5 +76,5 @@ if (!lastVisit) {
     }
 }
 
-// Store the current date as the last visit date
+// Update the last visit date in localStorage
 localStorage.setItem('lastVisit', currentDate);

@@ -102,4 +102,9 @@
     margin: 1rem 18px;
     grid-area: location;
 }
+
+.place-photo:hover {
+    transform: none;
+    box-shadow: none;
+}
 }
