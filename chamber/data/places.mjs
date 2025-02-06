@@ -6,7 +6,7 @@ export const places = [
         "address": "660 W 400 N, Blanding, UT 84511",
         "photo_link": "edgeofthecedars.webp"
     },
-    
+
     {
         "name": "Natural Bridges",
         "description": "Three majestic natural bridges invite you to ponder the power of water in a landscape defined by its absence. Hikers can view the bridges from the driving loop above, but where is the fun in that? Hit the trails and experience their grandeur from below and enjoy the breathtaking views. ",
