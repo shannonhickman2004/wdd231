@@ -7,19 +7,20 @@
     <title>Blanding Chamber of Commerce</title>
     <meta name="description" content="Chamber of Commerce for Blanding, UT">
     <meta name="author" content="Shannon Hickman">
-    <meta property="og:title" content="Business Directory - Blanding Chamber of Commerce">
+    <meta property="og:title" content="Attractions - Blanding Chamber of Commerce">
     <meta property="og:type" content="website">
     <meta property="og:image" content="../images/cedars.jpg">
     <meta property="og:url" content="https://shannonhickman2004.github.io/wdd231/chamber/directory.html">
     <link rel="icon" href="images/favicon.ico">
     <link rel="stylesheet" href="styles/normalize.css">
-    <link rel="stylesheet" href="styles/chamber.css">
-    <link rel="stylesheet" href="styles/chambersmall.css">
-    <link rel="stylesheet" href="styles/chambermedium.css">
+    <link rel="stylesheet" href="styles/discover.css">
+    <link rel="stylesheet" href="styles/discovermedium.css">
+    <link rel="stylesheet" href="styles/discoversmall.css">
+
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&display=swap"
         rel="stylesheet">
-    <script src="scripts/discover.js" defer></script>
+    <script src="scripts/discover.js" type="module" defer></script>
     <script src="scripts/index.js" defer></script>
 </head>
 
@@ -38,13 +39,17 @@
         </nav>
     </header>
     <main>
-        <main>
-            <h1>Places to Go</h1>
-            <div id="places">
-                <button id="grid-view">Grid View</button>
-            </div>
-        </main>
-    
+        <h1>Discover Attractions in Blanding</h1>
+
+        <section id="allplaces"></section>
+
+        <!-- Time-based message area -->
+        <aside id="visitor-message" class="message-container">
+            <!-- This will be populated with JS depending on last visit -->
+        </aside>
+
+    </main>
+
 
     <footer>
         <div class="footer-container">
