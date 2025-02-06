@@ -524,10 +524,10 @@ h3 {
         border-bottom: 1px solid var(--neutral-color1);
     }
 
-input[type=text],
-input[type=tel],
-input[type=date],
-input[type=email],
+input[type="text"],
+input[type="tel"],
+input[type="date"],
+input[type="email"],
 textarea,
 select {
         display: block;
@@ -559,7 +559,7 @@ input:required:valid {
         border-left-color: green;
     }
 
-input[type=submit] {
+input[type="submit"] {
         border: none;
         text-align: center;
         background-color: var(--primary-color);
