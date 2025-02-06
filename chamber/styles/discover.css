@@ -508,74 +508,75 @@ button:hover {
 /* input form */
 form {
     margin: 1rem 2%;
+}
 
-    label {
-        display: block;
-        font-size: .8rem;
-        color: var(--primary-color);
-        padding-top: .2rem;
-        margin-bottom: 0.5rem;
-    }
+label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--primary-color);
+    padding-top: 0.2rem;
+    margin-bottom: 0.5rem;
+}
 
-    h3 {
-        font-size: .9rem;
-        color: var(--neutral-color2);
-        margin: 1.5rem 0 .2rem 0;
-        border-bottom: 1px solid var(--neutral-color1);
-    }
+h3 {
+    font-size: 0.9rem;
+    color: var(--neutral-color2);
+    margin: 1.5rem 0 0.2rem 0;
+    border-bottom: 1px solid var(--neutral-color1);
+}
 
-    input[type="text"],
-    input[type="tel"],
-    input[type="date"],
-    input[type="email"],
-    textarea,
-    select {
-        display: block;
-        margin: .1rem 0 1rem 0;
-        padding: .5rem;
-        border: 1px solid #000;
-        border-radius: 4px;
-        border-left-width: 5px;
-        border-left-color: var(--accent-color1);
-        font-size: 1rem;
-        color: var(--neutral-color2);
-        width: 40%;
-        box-sizing: border-box;
-        resize: vertical;
-    }
+input[type="text"],
+input[type="tel"],
+input[type="date"],
+input[type="email"],
+textarea,
+select {
+    display: block;
+    margin: 0.1rem 0 1rem 0;
+    padding: 0.5rem;
+    border: 1px solid #000;
+    border-radius: 4px;
+    border-left-width: 5px;
+    border-left-color: var(--accent-color1);
+    font-size: 1rem;
+    color: var(--neutral-color2);
+    width: 40%;
+    box-sizing: border-box;
+    resize: vertical;
+}
 
-    input:required {
-        border-left-color: var(--neutral-color1);
-    }
+input:required {
+    border-left-color: var(--neutral-color1);
+}
 
-    input:focus,
-    textarea:focus {
-        border-color: black;
-        border-left-color: var(--secondary-color);
-        outline: none;
-    }
+input:focus,
+textarea:focus {
+    border-color: black;
+    border-left-color: var(--secondary-color);
+    outline: none;
+}
 
-    input:required:valid {
-        border-left-color: var(--primary-color);
-    }
+input:required:valid {
+    border-left-color: green;
+}
 
-    input[type="submit"] {
-        border: none;
-        text-align: center;
-        background-color: var(--primary-color);
-        color: white;
-        border-radius: 1rem;
-        padding: .75rem 1.5rem;
-        margin: 2rem 0;
-        font-size: 1.2rem;
-        -webkit-appearance: none;
-        appearance: none;
-    }
+input[type="submit"] {
+    border: none;
+    text-align: center;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 1rem;
+    padding: 0.75rem 1.5rem;
+    margin: 2rem 0;
+    font-size: 1.2rem;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 input:-webkit-autofill {
     -webkit-text-fill-color: var(--neutral-color2);
 }
+
 
 #results {
     background-color: var(--neutral-color1);
