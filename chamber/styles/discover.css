@@ -509,7 +509,7 @@ button:hover {
 form {
     margin: 1rem 2%;
 
-label {
+    label {
         display: block;
         font-size: .8rem;
         color: var(--primary-color);
@@ -517,19 +517,19 @@ label {
         margin-bottom: 0.5rem;
     }
 
-h3 {
+    h3 {
         font-size: .9rem;
         color: var(--neutral-color2);
         margin: 1.5rem 0 .2rem 0;
         border-bottom: 1px solid var(--neutral-color1);
     }
 
-input[type="text"],
-input[type="tel"],
-input[type="date"],
-input[type="email"],
-textarea,
-select {
+    input[type="text"],
+    input[type="tel"],
+    input[type="date"],
+    input[type="email"],
+    textarea,
+    select {
         display: block;
         margin: .1rem 0 1rem 0;
         padding: .5rem;
@@ -544,22 +544,22 @@ select {
         resize: vertical;
     }
 
-input:required {
+    input:required {
         border-left-color: var(--neutral-color1);
     }
 
-input:focus,
-textarea:focus {
+    input:focus,
+    textarea:focus {
         border-color: black;
         border-left-color: var(--secondary-color);
         outline: none;
     }
 
-input:required:valid {
-        border-left-color: green;
+    input:required:valid {
+        border-left-color: var(--primary-color);
     }
 
-input[type="submit"] {
+    input[type="submit"] {
         border: none;
         text-align: center;
         background-color: var(--primary-color);
@@ -698,12 +698,15 @@ aside {
     text-align: center;
     border-radius: 8px;
 }
+
 /* Gallery image hover effect */
 .place-photo {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .place-photo:hover {
-    transform: scale(1.1);    /* Enlarge the image slightly */
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* Add shadow effect */
+    transform: scale(1.1);
+    /* Enlarge the image slightly */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    /* Add shadow effect */
 }
