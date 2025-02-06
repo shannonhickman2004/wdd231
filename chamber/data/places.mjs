@@ -4,7 +4,7 @@ export const places = [
         "description": "Built around an existing Anasazi village, Edge of the Cedars State Park Museum serves as the primary repository for archaeological materials excavated from public lands in southeast Utah. It is also home to the largest collection of Anasazi pottery and artifacts on the West Coast. It also serves as a Bears Ears Education Center. ",
         "cost": "$5 per person",
         "address": "660 W 400 N, Blanding, UT 84511",
-        "photo_link": "edgeofthecedars.webp"
+        "photo_link": "bearsears.webp"
     },
     
     {
