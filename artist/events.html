@@ -4,19 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gary Guymon Impression Art</title>
+    <title>Blanding Chamber of Commerce</title>
     <meta name="description" content="Gary Guymon Artist Impressionist Art">
     <meta name="author" content="Shannon Hickman">
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="styles/normalize.css">
     <link rel="stylesheet" href="styles/artist.css">
-    <link rel="stylesheet" href="styles/artistsmall.css">
-    
     <script src="scripts/gallery.js" defer></script>
 </head>
 
 <body class="gallery-page">
     <header>
         <div class="logo-container">
-            <img src="images/garylogo.webp" alt="GaryLogo" class="logo">
+            <img src="images/garylogo.webp" alt="GaryLogo" class="logo" loading="lazy">
             <h1>Gary Guymon Impression Art</h1>
         </div>
         <button type="button" id="menu" aria-label="Toggle Menu"></button>
@@ -27,21 +27,39 @@
             <a href="form.html" class="nav-link">Contact</a>
         </nav>
     </header>
+    <main>
+        <section class="hero-content">
+            <h1 class="hero-heading">Exhibitions & Events</h1>
+            <p class="hero-subtext">Explore upcoming events and exhibitions featuring Gary Guymon's artwork.</p>
+        </section>
 
-    <>
-        <h1>Art Gallery</h1>
-        <div id="view-toggle">
-            <label for="filter-price-level">Filter by Price Level:</label>
-            <select id="filter-price-level"></select>
-        </div>
-        <div id="directory">Loading art pieces...</div>
+        <!-- Events Section -->
+        <section class="events-list">
+            <h2>Upcoming Events</h2>
+            <div class="event-card">
+                <h3>Southwest Art Show</h3>
+                <p>Date: March 15, 2025</p>
+                <p>Location: Art Center, Blanding, UT</p>
+                <p>Experience Gary Guymon's latest collection at this regional art exhibition.</p>
+            </div>
 
-                <!-- Modal Dialog for Image Focus -->
-                <dialog id="imageModal" class="modal-dialog">
-                    <button id="closeModal" aria-label="Close">&times;</button>
-                    <h2 id="modalTitle"></h2>
-                    <img id="modalImage" alt="Expanded Art Piece">
-                </dialog>
+            <div class="event-card">
+                <h3>Impressionist Workshop</h3>
+                <p>Date: April 10, 2025</p>
+                <p>Location: Moab Art Studio, Moab, UT</p>
+                <p>Join Gary for a hands-on workshop exploring impressionist painting techniques.</p>
+            </div>
+        </section>
+
+        <section class="past-events">
+            <h2>Past Events</h2>
+            <div class="event-card">
+                <h3>Desert Landscapes Exhibition</h3>
+                <p>Date: January 2024</p>
+                <p>Location: Canyon Museum of Art</p>
+                <p>Gary showcased his captivating desert-inspired works at this renowned exhibition.</p>
+            </div>
+        </section>
     </main>
 
     <footer>
@@ -65,11 +83,5 @@
             </div>
         </div>
     </footer>
-
-    <!-- Full-Screen Focus Box -->
-    <div class="image-focus-box" id="imageFocusBox">
-        <img src="" alt="Focused Art Piece" id="focusImage">
-    </div>
 </body>
-
 </html>

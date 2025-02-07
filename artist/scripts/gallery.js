@@ -1,91 +1,173 @@
-// Set the current year dynamically
-const currentYear = new Date().getFullYear();
-const currentYearElement = document.getElementById("currentYear");
-if (currentYearElement) {
-    currentYearElement.textContent = currentYear;
-}
+document.addEventListener('DOMContentLoaded', () => {
+    setDynamicDates();
+    setupMenuToggle();
 
-// Set the last modified date dynamically
-const lastModifiedDate = new Date(document.lastModified);
-const lastModifiedElement = document.getElementById("lastModified");
-if (lastModifiedElement) {
-    lastModifiedElement.textContent = `Last Updated: ${lastModifiedDate.toLocaleDateString()}`;
-}
-
-// Hamburger Menu Functionality
-const hamButton = document.querySelector('#menu');
-const navigation = document.querySelector('.navigation');
-const directory = document.querySelector('#directory');
-
-hamButton.addEventListener('click', () => {
-    navigation.classList.toggle('open');
-    hamButton.classList.toggle('open');
-});
-
-// Close the menu when a navigation link is clicked (for mobile view)
-const navLinks = document.querySelectorAll('.navigation a');
-navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        navigation.classList.remove('open');
-        hamButton.classList.remove('open');
-    });
-});
-
-const url = 'data/artist.json';  // JSON file with art pieces
-let artPiecesData = [];           // To store the fetched data
-
-// Fetch and process data
-const getArtPiecesData = async (url) => {
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        artPiecesData = data;
-        displayArtPieces(artPiecesData, 'grid');  // Display in grid view by default
-    } catch (error) {
-        console.error("Error fetching data:", error);
+    const currentPage = document.body.classList.contains('gallery-page') ? 'gallery' : 'home';
+    if (currentPage === 'gallery') {
+        initializeGallery();
+    } else if (currentPage === 'home') {
+        initializeSpotlight();
     }
-};
+});
 
-// Display art pieces in grid or list view
-const displayArtPieces = (artPieces, view) => {
-    const directory = document.getElementById('directory');
-    if (!directory) return;
+// Function to set the current year and last modified date dynamically
+function setDynamicDates() {
+    const currentYear = new Date().getFullYear();
+    document.getElementById('currentYear').textContent = currentYear;
 
-    directory.innerHTML = "";  // Clear previous content
-    directory.className = view === 'grid' ? 'grid-view' : 'list-view';  // Toggle view classes
+    const lastModifiedDate = new Date(document.lastModified);
+    document.getElementById('lastModified').textContent = `Last Updated: ${lastModifiedDate.toLocaleDateString()}`;
+}
 
-    artPieces.forEach(piece => {
-        // Create card elements for each art piece
-        const card = document.createElement('section');
-        card.className = 'art-card';
+// Function to toggle the mobile menu
+function setupMenuToggle() {
+    const hamButton = document.getElementById('menu');
+    const navigation = document.querySelector('.navigation');
 
-        const title = document.createElement('h2');
-        title.textContent = piece.name;
-
-        const image = document.createElement('img');
-        image.setAttribute('src', `images/${piece.image}`);
-        image.setAttribute('alt', `Image of ${piece.name}`);
-        image.setAttribute('loading', 'lazy');
-
-        const artist = document.createElement('p');
-        artist.textContent = `Artist Location: ${piece.subject}`;
-
-        const price = document.createElement('p');
-        price.textContent = `Value: ${piece.pricelevel}`;
-        
-
-        // Append elements to the card
-        card.append(image, title, artist, price);
-        directory.appendChild(card);
+    hamButton.addEventListener('click', () => {
+        navigation.classList.toggle('open');
+        hamButton.classList.toggle('open');
     });
-};
+}
 
-// Toggle between grid and list views
-document.getElementById('grid-view')?.addEventListener('click', () => displayArtPieces(artPiecesData, 'grid'));
-document.getElementById('list-view')?.addEventListener('click', () => displayArtPieces(artPiecesData, 'list'));
+// Function to initialize the gallery page
+async function initializeGallery() {
+    const directory = document.getElementById('directory');
+    const filterDropdown = document.getElementById('filter-price-level');
+    let artPiecesData = [];
 
-// Initialize data fetch and display
-getArtPiecesData(url);
+    try {
+        const response = await fetch('data/artist.json');
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+        artPiecesData = await response.json();
+
+        populateFilterOptions(artPiecesData);
+        applySavedFilter(filterDropdown, artPiecesData);
+        displayArtPieces(artPiecesData);
+
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+
+    // Save filter selection to localStorage
+    filterDropdown.addEventListener('change', () => {
+        localStorage.setItem('selectedFilter', filterDropdown.value);
+        const selectedLevel = filterDropdown.value;
+        const filteredPieces = selectedLevel === 'all'
+            ? artPiecesData
+            : artPiecesData.filter(piece => piece.pricelevel === selectedLevel);
+        displayArtPieces(filteredPieces);
+    });
+
+    function populateFilterOptions(artPieces) {
+        const priceLevels = [...new Set(artPieces.map(piece => piece.pricelevel))];
+        filterDropdown.innerHTML = '<option value="all">All Price Levels</option>';
+        priceLevels.forEach(level => {
+            const option = document.createElement('option');
+            option.value = level;
+            option.textContent = level;
+            filterDropdown.appendChild(option);
+        });
+    }
+
+    function applySavedFilter(filterDropdown, artPieces) {
+        const savedFilter = localStorage.getItem('selectedFilter');
+        if (savedFilter) {
+            filterDropdown.value = savedFilter;
+            const filteredPieces = savedFilter === 'all'
+                ? artPieces
+                : artPieces.filter(piece => piece.pricelevel === savedFilter);
+            displayArtPieces(filteredPieces);
+        }
+    }
+
+    function displayArtPieces(artPieces) {
+        directory.innerHTML = '';
+        artPieces.forEach(piece => {
+            const card = document.createElement('section');
+            card.className = 'art-card';
+
+            const title = document.createElement('h2');
+            title.textContent = piece.name;
+
+            const image = document.createElement('img');
+            image.src = `images/${piece.image}`;
+            image.alt = `Image of ${piece.name}`;
+            image.loading = 'lazy';
+
+            image.addEventListener('click', () => openImageModal(image.src, piece.name));
+
+            const location = document.createElement('p');
+            location.textContent = `Location: ${piece.subject}`;
+
+            const price = document.createElement('p');
+            price.textContent = `Price Level: ${piece.pricelevel}`;
+
+            card.append(image, title, location, price);
+            directory.appendChild(card);
+        });
+    }
+
+    function openImageModal(imageSrc, titleText) {
+        const modal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalTitle = document.getElementById('modalTitle');
+
+        modalImage.src = imageSrc;
+        modalTitle.textContent = titleText;
+        modal.showModal();
+    }
+
+    document.getElementById('closeModal').addEventListener('click', () => {
+        document.getElementById('imageModal').close();
+    });
+}
+
+// Function to initialize the spotlight on the homepage
+async function initializeSpotlight() {
+    const spotlightContainer = document.querySelector('.spotlight-container');
+
+    try {
+        const response = await fetch('data/artist.json');
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+        const artPiecesData = await response.json();
+
+        // Select 3 random art pieces
+        const randomPieces = getRandomItems(artPiecesData, 3);
+
+        // Display the spotlight items
+        displaySpotlight(randomPieces, spotlightContainer);
+
+    } catch (error) {
+        console.error('Error fetching spotlight data:', error);
+    }
+
+    function getRandomItems(array, count) {
+        const shuffled = [...array].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
+    }
+
+    function displaySpotlight(artPieces, container) {
+        container.innerHTML = '';
+        artPieces.forEach(piece => {
+            const card = document.createElement('section');
+            card.className = 'spotlight-card';
+
+            const title = document.createElement('h2');
+            title.textContent = piece.name;
+
+            const image = document.createElement('img');
+            image.src = `images/${piece.image}`;
+            image.alt = `Spotlight Image of ${piece.name}`;
+            image.loading = 'lazy';
+
+            const description = document.createElement('p');
+            description.textContent = piece.subject;
+
+            card.append(image, title, description);
+            container.appendChild(card);
+        });
+    }
+}

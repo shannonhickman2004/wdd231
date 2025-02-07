@@ -1,33 +1,34 @@
 /* Mobile Adjustment: Single Column for Grid */
 @media (max-width: 768px) {
-    #directory.grid-view {
+
+    #directory {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 1rem;
-        margin-top: 1rem;
+        gap: 1rem; 
     }
 
     .form-grid-layout {
         display: grid;
-        grid-template-columns: 1fr;;
+        grid-template-columns: 1fr;
+        ;
         gap: 1rem;
         margin-top: 1rem;
     }
 
     /* Form styling remains the same */
-form {
-    grid-column: 1;
-    margin: 1rem 2%;
-}
+    form {
+        grid-column: 1;
+        margin: 1rem 2%;
+    }
 
-/* Membership cards styling */
-.cards-container {
-    grid-column: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: .5rem;
-    align-items: center;
-}
+    /* Membership cards styling */
+    .cards-container {
+        grid-column: 1;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: .5rem;
+        align-items: center;
+    }
 
     #directory.grid-view .member-card {
         width: 100%;
@@ -154,19 +155,55 @@ form {
     }
 
     .form-grid-layout {
-        grid-template-columns: 1fr;    /* Single-column layout */
-        gap: 1rem;                     /* Adjust spacing */
-    }
-
-    .cards-container {
-        display: flex;
-        flex-direction: column;        /* Stack cards vertically */
-        align-items: center;
-        gap: 1rem;                     /* Space between cards */
+        grid-template-columns: 1fr;
+        /* Single-column layout */
+        gap: 1rem;
+        /* Adjust spacing */
     }
 
     .card {
-        width: 90%;                    /* Make cards fit the screen */
+        width: 90%;
+        /* Make cards fit the screen */
         max-width: 300px;
     }
+    .form-grid-layout {
+        grid-template-columns: 1fr;
+    }
+
+/* Social Media Links */
+.sociallinks {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.sociallinks img {
+    width: 40px;
+    height: 40px;
+    transition: transform 0.3s;
+}
+
+.sociallinks img:hover {
+    transform: scale(1.1);
+}
+
+/* Contact Picture Holder */
+.contact-picture {
+    margin-top: 2rem;
+    text-align: center;
+    position: relative;
+    background: var(--secondary-color);
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.contact-picture img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+    
 }

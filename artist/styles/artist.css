@@ -12,7 +12,6 @@
 body {
     font-family: var(--body-font);
     font-size: 16px;
-    line-height: 1.6;
     margin: 0;
     padding: 0;
     background-color: var(--neutral-color1);
@@ -23,7 +22,6 @@ body {
 header {
     display: flex;
     justify-content: space-between;
-
     background-color: var(--primary-color);
     color: var(--neutral-color1);
     padding: 1.5rem 2rem;
@@ -41,12 +39,9 @@ header {
     height: auto;
 }
 
-h1 {
+h1, h2, h3 {
     text-align: center;
-}
-
-h2 {
-    text-align: center;
+    font-size: 1.5rem;
 }
 
 .logo-container h1 {
@@ -105,148 +100,32 @@ h2 {
 #menu.open::before {
     content: "✖";
 }
-
-/* View Toggle Buttons */
 #view-toggle {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin: 1rem 0;
+    position: relative;     /* Allows precise positioning */
+    top: 50%;               /* Move to the middle vertically */
+    left: 50%;              /* Move to the middle horizontally */
+    transform: translate(-50%, -50%); /* Offset by half its own width & height */
+    text-align: center;     /* Center the text inside */
+    padding: 20px;          /* Add padding around the box */
+    background-color: #f0f0f0;  /* Background color */
+    border: 1px solid #ccc; /* Optional border */
+    border-radius: 10px;    /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow */
+    width: 400px;           /* Set a width for the box */
 }
 
-button {
-    padding: 0.5rem 1rem;
-    border: 1px solid var(--neutral-color2);
-    background-color: var(--neutral-color2);
-    color: var(--neutral-color1);
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: var(--body-font);
-    transition: background-color 0.3s, color 0.3s;
+select {
+    margin-top: 10px;
+    padding: 5px;
+    width: 100%;
+
 }
 
-button:hover {
-    background-color: var(--accent-color1);
-    border-color: var(--accent-color1);
-    color: var(--neutral-color1); 
-}
-
-/* Business Directory Styling */
-#directory {
-    padding: 1rem;
-}
-
-/* Gallery page (gallery.html) - Standard size */
-.gallery-page.grid-view{
-    width: 150px;
-    height: 150px;
-    object-fit: contain;
-    margin-bottom: 1rem;
-}
-
-.gallery-page .art-card h2 {
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-}
-
-.gallery-page .art-card p {
-    font-size: 1rem;
-}
 /* Grid View Styling */
-#directory.grid-view {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1rem;
-}
-
-#directory.grid-view .art-card {
-    flex: 1 1 calc(33.33% - 2rem);
-    max-width: calc(33.33% - 2rem);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    box-sizing: border-box;
-    height: 100%;
-    min-height: 300px;
-    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
-    border: 1px solid var(--secondary-color);
-    border-radius: 8px;
-    background-color: var(--neutral-color1);
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-#directory.grid-view .art-card h2 {
-    font-family: var(--header-font);
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    margin-bottom: 0.5rem;
-}
-
-#directory .art-card img {
-    width: 100%;
-    height: 100%;
-    margin-bottom: 1rem;
-    border-radius: 5px;
-}
-
-#directory.grid-view .art-card:hover {
-    box-shadow: 0px 6px 8px var(--accent-color1);
-    transform: translateY(-3px);
-}
-
-
-/* List View Styling */
-#directory.list-view {
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-    align-items: center;
-}
-
-#directory.list-view .art-card {
+#directory {
     display: grid;
-    grid-template-columns: 2fr 1fr .75fr 1fr;
-    gap: 1rem;
-    width: calc(100% - 2rem);
-    /* Add space for padding on both sides */
-    max-width: 1200px;
-    padding: 1rem;
-    border: none;
-    box-shadow: none;
-    background-color: var(--neutral-color1);
-    color: var(--neutral-color2);
-}
-
-/* Zebra Striping */
-#directory.list-view .art-card:nth-child(odd) {
-    background-color: #f9f9f9;
-}
-
-#directory.list-view .art-card:nth-child(even) {
-    background-color: #eeeeee;
-}
-
-/* Columns Styling */
-#directory.list-view .art-card div {
-    text-align: left;
-    padding: 0 1rem;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
-
-
-/* Hide Images in List View */
-#directory.list-view .art-card img {
-    width: 100%;
-    height: 100%;
-    margin-bottom: 1rem;
-    border-radius: 5px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem; 
 }
 
 /* Added Styles for Hero Section of Index Page*/
@@ -272,7 +151,7 @@ button:hover {
     object-fit: cover;
 }
 
-.cta-button {
+button {
     position: absolute;
     bottom: 2rem;
     right: 2rem;
@@ -286,11 +165,80 @@ button:hover {
     transition: background-color 0.3s;
 }
 
-.cta-button:hover {
+button:hover {
     background-color: var(--accent-color1);
     color: var(--neutral-color1);
 }
 
+/* Hero Content */
+.hero-content {
+    background-color: var(--primary-color);
+    color: var(--neutral-color1);
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.hero-heading {
+    font-size: 2.5rem;
+    font-family: var(--header-font);
+    margin-bottom: 2rem;
+}
+
+/* Horizontal Hero Grid */
+.horizontal-hero-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+@media (max-width: 767px) {
+    .horizontal-hero-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+/* Hero Card Styles */
+.hero-card-horizontal {
+    background-color: var(--neutral-color1);
+    color: var(--neutral-color2);
+    border-radius: 10px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-card-horizontal h2 {
+    font-size: 1.5rem;
+    color: var(--neutral-color2);
+    margin: 0.5rem 0;
+}
+
+/* Image within the card */
+.hero-card-horizontal img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+/* Description Text */
+.hero-card-horizontal p {
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Hover Effect */
+.hero-card-horizontal:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+}
+/* Join page membership cards*/
 .card {
     background-color: var(--neutral-color1);
     border: 1px solid var(--secondary-color);
@@ -299,7 +247,6 @@ button:hover {
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     margin: 1rem;
     text-align: center;
-    /* Adjust dimensions for a square shape */
     height: 250px;
     /* Adjust as needed for card size */
     width: 250px;
@@ -318,13 +265,6 @@ button:hover {
     margin-bottom: 0.5rem;
 }
 
-.weather-details p {
-    margin: 0.3rem 0;
-    line-height: 1;
-    font-size: 0.9rem;
-    padding: 0;
-}
-
 /* Main Grid Layout */
 .main-grid {
     display: grid;
@@ -333,40 +273,18 @@ button:hover {
     margin-top: 2rem;
 }
 
-.card p {
-    line-height: 1;
-    margin: 0.5rem 0;
-    padding: 0;
-}
-
-.card-header {
-    background-color: var(--card-header-bg);
-}
-
-
-#events,
-#weather,
-#forecast {
-    height: 90%;
-    overflow: hidden;
-    padding: 0.5rem;
-}
-
 /* Grid Layout for Spotlight Container */
 .spotlight-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
-    /* Space between cards */
     padding: 1.5rem;
-    /* Padding around the grid */
 }
 
-/* Spotlight Card Styling */
+/* Art and Spotlight Card Styling */
 .art-card, .spotlight-card {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
     text-align: center;
     padding: 1rem;
@@ -377,8 +295,8 @@ button:hover {
     box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
     /* Card shadow */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    height: 400px;                    /* Increase card height for larger image */
-    max-width: 300px;                 /* Increase card width */
+    height: 500px;                    /* Increase card height for larger image */
+    max-width: 450px;                 /* Increase card width */
     margin: 0 auto;
 }
 
@@ -390,150 +308,51 @@ button:hover {
     border-radius: 5px;
 }
 
-/* Card Title Styling */
-.spotlight-card h3 {
-    color: var(--primary-color);
-    font-size: 0.85rem;              /* Smaller font for details */
-    margin: 0.2rem 0;
+/*gives a hover effect to spotlight and art cards*/
+.art-card:hover, .spotlight-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Card Text Styling */
-.spotlight-card p {
-    margin: 0.3rem 0;
-    font-size: 1rem;
-}
-
-/* Card Link Styling */
-.spotlight-card a {
-    color: var(--secondary-color);
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.spotlight-card a:hover {
-    text-decoration: underline;
-    color: #FFFFFF;
-}
-
-/* Forcast Card Styling */
-#forecast-container {
+/* Hidden by default */
+.image-focus-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
     display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-    justify-content: space-around;
-    padding: 0.5rem;
-}
-
-.forecast-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    gap: 0.3rem;
-    padding: 0.5rem;
-    margin: 0.5rem;
-    text-align: center;
-}
-
-.forecast-card img {
-    width: 50px;
-    height: 50px;
-    margin: 0.3rem 0;
-}
-
-.forecast-card p {
-    margin: 0.2rem 0;
-    line-height: 1.2;
-    font-size: 0.9rem;
-}
-
-/* Weather Overview Section */
-.weather-overview {
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    margin-bottom: 1rem;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
 }
 
-#weather-icon {
-    margin: 0 auto;
-    display: block;
-    max-width: 100px;
-    height: auto;
+/* Display image in full screen */
+.image-focus-box img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
 }
 
-/* Current Weather Card */
-
-#weather-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+/* Show the focus box when active */
+.image-focus-box.active {
+    opacity: 1;
+    pointer-events: all;
 }
 
-.weather-overview {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 1rem;
-}
 
-#weather-icon {
-    width: 100px;
-    height: 100px;
-}
 
-.weather-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.weather-item img {
-    width: 24px;
-    height: 24px;
-}
-
-/* Form and card layout */
-.form-grid-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    margin: 0 auto;
-    padding: 2rem;
-}
 
 /* Form styling remains the same */
 form {
     grid-column: 1 / 2;
     margin: 1rem 2%;
-}
-
-/* Membership cards styling */
-.cards-container {
-    grid-column: 2 / 3;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: .5rem;
-    align-items: center;
-}
-
-/* Card styling */
-.card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 1rem;
-    background-color: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.2s ease-in-out;
-    width: 100%
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Existing form on join page label styles */
@@ -601,6 +420,97 @@ input:-webkit-autofill {
     -webkit-text-fill-color: var(--neutral-color2);
 }
 
+.form-grid-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Form Layout */
+.form-layout {
+    background-color: var(--neutral-color1);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    font-weight: bold;
+    margin: 1rem 0 0.5rem;
+}
+
+form input, form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--secondary-color);
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+form input[type="submit"] {
+    margin-top: 1.5rem;
+    background-color: var(--accent-color1);
+    color: var(--neutral-color1);
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    padding: 0.75rem;
+    transition: background-color 0.3s;
+}
+
+form input[type="submit"]:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Contact Details Section */
+.contact-details {
+    background-color: var(--neutral-color1);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.contact-details h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.contact-details p {
+    margin: 0.5rem 0;
+}
+
+.contact-details a {
+    color: var(--accent-color1);
+    text-decoration: none;
+}
+
+.contact-details a:hover {
+    text-decoration: underline;
+}
+
+/* Contact Picture */
+.contact-picture {
+    margin-top: 2rem;
+    text-align: center;
+    background: var(--secondary-color);
+}
+
+.contact-picture img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+
 /* Results section */
 #results {
     background-color: var(--neutral-color1);
@@ -621,59 +531,6 @@ label {
     margin-left: 1rem;
 }
 
-/* Initial Animation */
-.cards-container .card {
-    width: 90%;
-    height: 75%;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 1rem;
-    background-color: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-
-    /* Initial animation properties */
-    opacity: 0;                     /* Start hidden */
-    transform: scale(0.85);         /* Start slightly smaller */
-    animation: fadeInGrow 1.5s ease-in-out forwards, colorPulse 4s 1s infinite alternate;
-}
-
-/* Hover effect */
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* Keyframes for Fade-In and Scale Animation */
-@keyframes fadeInGrow {
-    0% {
-        opacity: 0;
-        transform: scale(0.85);
-    }
-    60% {
-        opacity: 0.7;
-        transform: scale(1.05);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* Keyframes for Color Pulse Animation */
-@keyframes colorPulse {
-    0% {
-        background-color: #fff;
-    }
-    100% {
-        background-color: #ffe4b3;   /* Soft pulsing color */
-    }
-}
 /*Styling for thank you page*/
 /* Results Section Styling */
 #results {
@@ -698,6 +555,98 @@ label {
     line-height: 1.5;
     color: var(--neutral-color2);
 }
+/*Events styling*/
+.events-list, .past-events {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.events-list h2, .past-events h2 {
+    font-size: 2rem;
+    color: var(--accent-color1);
+    margin-bottom: 1rem;
+}
+
+.event-card {
+    background-color: var(--neutral-color1);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.event-card h3 {
+    font-size: 1.5rem;
+    color: var(--neutral-color2);
+    margin-bottom: 0.5rem;
+}
+
+.event-card p {
+    margin: 0.5rem 0;
+    color: var(--neutral-color2);
+}
+
+/* Custom Modal Dialog Styles */
+.modal-dialog {
+    width: 80%;
+    max-width: 600px;
+    padding: 2rem 1.5rem;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    background-color: var(--neutral-color1);
+    text-align: center;
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-dialog img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+}
+
+/* Style and position the close button */
+#closeModal {
+    background: none;
+    border: none;
+    font-size: 2.5rem;
+    color: var(--neutral-color2);
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    line-height: 1;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: color 0.3s, background-color 0.3s;
+}
+
+#closeModal:hover {
+    color: var(--neutral-color1);
+    background-color: var(--accent-color1);
+}
+
+/* Remove default blue outline on focus */
+#closeModal:focus {
+    outline: none;
+}
+
+
+/* Modal fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
 
 
 /* Footer Styling */
@@ -715,14 +664,6 @@ footer {
     max-width: 1200px;
     margin: 0 auto;
     align-items: center;
-}
-
-.businessinfo {
-    text-align: left;
-}
-
-.businessinfo p {
-    margin: 0.5rem 0;
 }
 
 .sociallinks {
