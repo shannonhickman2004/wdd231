@@ -99,7 +99,7 @@ async function initializeGallery() {
             image.addEventListener('click', () => openImageModal(image.src, piece.name));
 
             const location = document.createElement('p');
-            location.textContent = `Location: ${piece.subject}`;
+            location.textContent = `Subject: ${piece.subject}`;
 
             const price = document.createElement('p');
             price.textContent = `Price Level: ${piece.pricelevel}`;

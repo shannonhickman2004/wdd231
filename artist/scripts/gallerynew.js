@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             const location = document.createElement('p');
-            location.textContent = `Location: ${piece.subject}`;
+            location.textContent = `Subject: ${piece.subject}`;
 
             const price = document.createElement('p');
             price.textContent = `Price Level: ${piece.pricelevel}`;

@@ -101,7 +101,7 @@ const displayArtPieces = (artPieces, view) => {
         image.setAttribute('loading', 'lazy');
 
         const artist = document.createElement('p');
-        artist.textContent = `Location: ${piece.subject}`;
+        artist.textContent = `Subject: ${piece.subject}`;
 
         const price = document.createElement('p');
         price.textContent = `Value: ${piece.pricelevel}`;
