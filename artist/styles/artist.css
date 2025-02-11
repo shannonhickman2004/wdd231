@@ -321,7 +321,7 @@ button:hover {
     box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
     /* Card shadow */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    height: 500px;
+    height: 550px;
     /* Increase card height for larger image */
     max-width: 450px;
     /* Increase card width */
