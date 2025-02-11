@@ -8,6 +8,42 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (currentPage === 'home') {
         initializeSpotlight();
     }
+
+    // Handle form submission for the contact page
+    const form = document.getElementById('contactForm');
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Collect form data
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+
+            // Save form data to sessionStorage
+            sessionStorage.setItem('formData', JSON.stringify(data));
+
+            // Redirect to the thank you page
+            window.location.href = 'thankyou.html';
+        });
+    }
+});
+
+// Display form data on the thankyou.html page
+window.addEventListener('DOMContentLoaded', () => {
+    const formSummaryContainer = document.getElementById('formSummary');
+    if (formSummaryContainer) {
+        const formData = JSON.parse(sessionStorage.getItem('formData'));
+        if (formData) {
+            formSummaryContainer.innerHTML = `
+                <p><strong>Name:</strong> ${formData.name}</p>
+                <p><strong>Email:</strong> ${formData.email}</p>
+                <p><strong>Art Title:</strong> ${formData['art-title']}</p>
+                <p><strong>Message:</strong> ${formData.message}</p>
+            `;
+        } else {
+            formSummaryContainer.innerHTML = `<p>No form data available.</p>`;
+        }
+    }
 });
 
 // Function to set the current year and last modified date dynamically
