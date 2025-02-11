@@ -64,9 +64,14 @@ h2 {
     transition: all 0.3s ease-in-out;
 }
 
-.nav-link {
+a.nav-link {
+    background-color: var(--neutral-color1, #000000);
+    color: var(--neutral-color2, #FFFFFF);
+}
+
+a.nav-link {
     text-decoration: none;
-    color: var(--neutral-color1, #FFFFFF);
+    color: var(--neutral-color2, #FFFFFF);
     font-size: 1.2rem;
     font-weight: bold;
     transition: color 0.3s, background-color 0.3s;
@@ -74,14 +79,14 @@ h2 {
     border-radius: 5px;
 }
 
-.nav-link:hover,
-.nav-link:focus {
-    background-color: var(--secondary-color, #30C8B0);
-    color: var(--neutral-color2, #000000);
+a.nav-link:hover,
+a.nav-link:focus {
+    background-color: var(--neutral-color2, #000000);
+    color: var(--neutral-color1, #FFFFFF);
 }
 
-.nav-link.active {
-    background-color: var(--secondary-color, #30C8B0);
+a.nav-link.active {
+    background-color: var(--secondary-color, #ffffff);
     color: var(--neutral-color2, #000000);
 }
 
