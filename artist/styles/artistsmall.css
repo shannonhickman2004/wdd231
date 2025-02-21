@@ -205,11 +205,11 @@
     
         .events-list,
         .past-events {
-            width: 100% !important; /* Ensure full width */
+            width: 100% !important;
         }
     
         .event-card {
-            width: 100% !important; /* Fix possible width issues */
+            width: 100% !important;
         }
     
 }
