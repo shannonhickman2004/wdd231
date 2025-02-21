@@ -242,6 +242,5195 @@ button:hover {
     margin: 0.5rem 0;
 }
 
+Share
+
+
+You said:
+does this js make my images that are going to be loaded from my son file lazy load
+ChatGPT said:
+Can you share the JavaScript code you're using? That way, I can check if it's correctly implementing lazy loading for your images. If you're loading images from a JSON file (which I assume you mean by "
+
+
+
+
+
+
+
+You said:
+document.addEventListener('DOMContentLoaded', () => {
+    setDynamicDates();
+    setupMenuToggle();
+
+    const currentPage = document.body.classList.contains('gallery-page') ? 'gallery' : 'home';
+    if (currentPage === 'gallery') {
+        initializeGallery();
+    } else if (currentPage === 'home') {
+        initializeSpotlight();
+    }
+
+    // Handle form submission for the contact page
+    const form = document.getElementById('contactForm');
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Collect form data
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+
+            // Save form data to sessionStorage
+            sessionStorage.setItem('formData', JSON.stringify(data));
+
+            // Redirect to the thank you page
+            window.location.href = 'thankyou.html';
+        });
+    }
+});
+
+// Display form data on the thankyou.html page
+window.addEventListener('DOMContentLoaded', () => {
+    const formSummaryContainer = document.getElementById('formSummary');
+    if (formSummaryContainer) {
+        const formData = JSON.parse(sessionStorage.getItem('formData'));
+        if (formData) {
+            formSummaryContainer.innerHTML = 
+                <p><strong>Name:</strong> ${formData.name}</p>
+                <p><strong>Email:</strong> ${formData.email}</p>
+                <p><strong>Art Title:</strong> ${formData['art-title']}</p>
+                <p><strong>Message:</strong> ${formData.message}</p>
+            ;
+        } else {
+            formSummaryContainer.innerHTML = <p>No form data available.</p>;
+        }
+    }
+});
+
+// Function to set the current year and last modified date dynamically
+function setDynamicDates() {
+    const currentYear = new Date().getFullYear();
+    document.getElementById('currentYear').textContent = currentYear;
+
+    const lastModifiedDate = new Date(document.lastModified);
+    document.getElementById('lastModified').textContent = Last Updated: ${lastModifiedDate.toLocaleDateString()};
+}
+
+// Function to toggle the mobile menu
+function setupMenuToggle() {
+    const hamButton = document.getElementById('menu');
+    const navigation = document.querySelector('.navigation');
+
+    hamButton.addEventListener('click', () => {
+        navigation.classList.toggle('open');
+        hamButton.classList.toggle('open');
+    });
+}
+
+// Function to initialize the gallery page
+async function initializeGallery() {
+    const directory = document.getElementById('directory');
+    const filterDropdown = document.getElementById('filter-price-level');
+    let artPiecesData = [];
+
+    try {
+        const response = await fetch('data/artist.json');
+        if (!response.ok) throw new Error(HTTP error! Status: ${response.status});
+
+        artPiecesData = await response.json();
+
+        populateFilterOptions(artPiecesData);
+        applySavedFilter(filterDropdown, artPiecesData);
+        displayArtPieces(artPiecesData);
+
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+
+    // Save filter selection to localStorage
+    filterDropdown.addEventListener('change', () => {
+        localStorage.setItem('selectedFilter', filterDropdown.value);
+        const selectedLevel = filterDropdown.value;
+        const filteredPieces = selectedLevel === 'all'
+            ? artPiecesData
+            : artPiecesData.filter(piece => piece.pricelevel === selectedLevel);
+        displayArtPieces(filteredPieces);
+    });
+
+    function populateFilterOptions(artPieces) {
+        const priceLevels = [...new Set(artPieces.map(piece => piece.pricelevel))];
+        filterDropdown.innerHTML = '<option value="all">All Price Levels</option>';
+        priceLevels.forEach(level => {
+            const option = document.createElement('option');
+            option.value = level;
+            option.textContent = level;
+            filterDropdown.appendChild(option);
+        });
+    }
+
+    function applySavedFilter(filterDropdown, artPieces) {
+        const savedFilter = localStorage.getItem('selectedFilter');
+        if (savedFilter) {
+            filterDropdown.value = savedFilter;
+            const filteredPieces = savedFilter === 'all'
+                ? artPieces
+                : artPieces.filter(piece => piece.pricelevel === savedFilter);
+            displayArtPieces(filteredPieces);
+        }
+    }
+
+    function displayArtPieces(artPieces) {
+        directory.innerHTML = '';
+        artPieces.forEach(piece => {
+            const card = document.createElement('section');
+            card.className = 'art-card';
+
+            const title = document.createElement('h2');
+            title.textContent = piece.name;
+
+            const image = document.createElement('img');
+            image.src = images/${piece.image};
+            image.alt = Image of ${piece.name};
+            image.loading = 'lazy';
+
+            image.addEventListener('click', () => openImageModal(image.src, piece.name));
+
+            const location = document.createElement('p');
+            location.textContent = Subject: ${piece.subject};
+
+            const price = document.createElement('p');
+            price.textContent = Price Level: ${piece.pricelevel};
+
+            card.append(image, title, location, price);
+            directory.appendChild(card);
+        });
+    }
+
+    function openImageModal(imageSrc, titleText) {
+        const modal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalTitle = document.getElementById('modalTitle');
+
+        modalImage.src = imageSrc;
+        modalTitle.textContent = titleText;
+        modal.showModal();
+    }
+
+    document.getElementById('closeModal').addEventListener('click', () => {
+        document.getElementById('imageModal').close();
+    });
+}
+
+// Function to initialize the spotlight on the homepage
+async function initializeSpotlight() {
+    const spotlightContainer = document.querySelector('.spotlight-container');
+
+    try {
+        const response = await fetch('data/artist.json');
+        if (!response.ok) throw new Error(HTTP error! Status: ${response.status});
+
+        const artPiecesData = await response.json();
+
+        // Select 3 random art pieces
+        const randomPieces = getRandomItems(artPiecesData, 3);
+
+        // Display the spotlight items
+        displaySpotlight(randomPieces, spotlightContainer);
+
+    } catch (error) {
+        console.error('Error fetching spotlight data:', error);
+    }
+
+    function getRandomItems(array, count) {
+        const shuffled = [...array].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
+    }
+
+    function displaySpotlight(artPieces, container) {
+        container.innerHTML = '';
+        artPieces.forEach(piece => {
+            const card = document.createElement('section');
+            card.className = 'spotlight-card';
+
+            const title = document.createElement('h2');
+            title.textContent = piece.name;
+
+            const image = document.createElement('img');
+            image.src = images/${piece.image};
+            image.alt = Spotlight Image of ${piece.name};
+            image.loading = 'lazy';
+
+            const description = document.createElement('p');
+            description.textContent = piece.subject;
+
+            card.append(image, title, description);
+            container.appendChild(card);
+        });
+    }
+}
+ChatGPT said:
+
+
+
+
+
+
+You said:
+there is a json fole it uses to load the art
+ChatGPT said:
+Yes, I can check whether your JavaScript properly lazy loads images from your JSON file. Please share your JavaScript code that fetches and displays the images from the JSON file, and I’ll review it for lazy loading implementation.
+
+If lazy loading isn't included, I can help you add it!
+
+
+
+
+
+
+
+You said:
+document.addEventListener('DOMContentLoaded', () => {
+    setDynamicDates();
+    setupMenuToggle();
+
+    const currentPage = document.body.classList.contains('gallery-page') ? 'gallery' : 'home';
+    if (currentPage === 'gallery') {
+        initializeGallery();
+    } else if (currentPage === 'home') {
+        initializeSpotlight();
+    }
+
+    // Handle form submission for the contact page
+    const form = document.getElementById('contactForm');
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Collect form data
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+
+            // Save form data to sessionStorage
+            sessionStorage.setItem('formData', JSON.stringify(data));
+
+            // Redirect to the thank you page
+            window.location.href = 'thankyou.html';
+        });
+    }
+});
+
+// Display form data on the thankyou.html page
+window.addEventListener('DOMContentLoaded', () => {
+    const formSummaryContainer = document.getElementById('formSummary');
+    if (formSummaryContainer) {
+        const formData = JSON.parse(sessionStorage.getItem('formData'));
+        if (formData) {
+            formSummaryContainer.innerHTML = 
+                <p><strong>Name:</strong> ${formData.name}</p>
+                <p><strong>Email:</strong> ${formData.email}</p>
+                <p><strong>Art Title:</strong> ${formData['art-title']}</p>
+                <p><strong>Message:</strong> ${formData.message}</p>
+            ;
+        } else {
+            formSummaryContainer.innerHTML = <p>No form data available.</p>;
+        }
+    }
+});
+
+// Function to set the current year and last modified date dynamically
+function setDynamicDates() {
+    const currentYear = new Date().getFullYear();
+    document.getElementById('currentYear').textContent = currentYear;
+
+    const lastModifiedDate = new Date(document.lastModified);
+    document.getElementById('lastModified').textContent = Last Updated: ${lastModifiedDate.toLocaleDateString()};
+}
+
+// Function to toggle the mobile menu
+function setupMenuToggle() {
+    const hamButton = document.getElementById('menu');
+    const navigation = document.querySelector('.navigation');
+
+    hamButton.addEventListener('click', () => {
+        navigation.classList.toggle('open');
+        hamButton.classList.toggle('open');
+    });
+}
+
+// Function to initialize the gallery page
+async function initializeGallery() {
+    const directory = document.getElementById('directory');
+    const filterDropdown = document.getElementById('filter-price-level');
+    let artPiecesData = [];
+
+    try {
+        const response = await fetch('data/artist.json');
+        if (!response.ok) throw new Error(HTTP error! Status: ${response.status});
+
+        artPiecesData = await response.json();
+
+        populateFilterOptions(artPiecesData);
+        applySavedFilter(filterDropdown, artPiecesData);
+        displayArtPieces(artPiecesData);
+
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+
+    // Save filter selection to localStorage
+    filterDropdown.addEventListener('change', () => {
+        localStorage.setItem('selectedFilter', filterDropdown.value);
+        const selectedLevel = filterDropdown.value;
+        const filteredPieces = selectedLevel === 'all'
+            ? artPiecesData
+            : artPiecesData.filter(piece => piece.pricelevel === selectedLevel);
+        displayArtPieces(filteredPieces);
+    });
+
+    function populateFilterOptions(artPieces) {
+        const priceLevels = [...new Set(artPieces.map(piece => piece.pricelevel))];
+        filterDropdown.innerHTML = '<option value="all">All Price Levels</option>';
+        priceLevels.forEach(level => {
+            const option = document.createElement('option');
+            option.value = level;
+            option.textContent = level;
+            filterDropdown.appendChild(option);
+        });
+    }
+
+    function applySavedFilter(filterDropdown, artPieces) {
+        const savedFilter = localStorage.getItem('selectedFilter');
+        if (savedFilter) {
+            filterDropdown.value = savedFilter;
+            const filteredPieces = savedFilter === 'all'
+                ? artPieces
+                : artPieces.filter(piece => piece.pricelevel === savedFilter);
+            displayArtPieces(filteredPieces);
+        }
+    }
+
+    function displayArtPieces(artPieces) {
+        directory.innerHTML = '';
+        artPieces.forEach(piece => {
+            const card = document.createElement('section');
+            card.className = 'art-card';
+
+            const title = document.createElement('h2');
+            title.textContent = piece.name;
+
+            const image = document.createElement('img');
+            image.src = images/${piece.image};
+            image.alt = Image of ${piece.name};
+            image.loading = 'lazy';
+
+            image.addEventListener('click', () => openImageModal(image.src, piece.name));
+
+            const location = document.createElement('p');
+            location.textContent = Subject: ${piece.subject};
+
+            const price = document.createElement('p');
+            price.textContent = Price Level: ${piece.pricelevel};
+
+            card.append(image, title, location, price);
+            directory.appendChild(card);
+        });
+    }
+
+    function openImageModal(imageSrc, titleText) {
+        const modal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalTitle = document.getElementById('modalTitle');
+
+        modalImage.src = imageSrc;
+        modalTitle.textContent = titleText;
+        modal.showModal();
+    }
+
+    document.getElementById('closeModal').addEventListener('click', () => {
+        document.getElementById('imageModal').close();
+    });
+}
+
+// Function to initialize the spotlight on the homepage
+async function initializeSpotlight() {
+    const spotlightContainer = document.querySelector('.spotlight-container');
+
+    try {
+        const response = await fetch('data/artist.json');
+        if (!response.ok) throw new Error(HTTP error! Status: ${response.status});
+
+        const artPiecesData = await response.json();
+
+        // Select 3 random art pieces
+        const randomPieces = getRandomItems(artPiecesData, 3);
+
+        // Display the spotlight items
+        displaySpotlight(randomPieces, spotlightContainer);
+
+    } catch (error) {
+        console.error('Error fetching spotlight data:', error);
+    }
+
+    function getRandomItems(array, count) {
+        const shuffled = [...array].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
+    }
+
+    function displaySpotlight(artPieces, container) {
+        container.innerHTML = '';
+        artPieces.forEach(piece => {
+            const card = document.createElement('section');
+            card.className = 'spotlight-card';
+
+            const title = document.createElement('h2');
+            title.textContent = piece.name;
+
+            const image = document.createElement('img');
+            image.src = images/${piece.image};
+            image.alt = Spotlight Image of ${piece.name};
+            image.loading = 'lazy';
+
+            const description = document.createElement('p');
+            description.textContent = piece.subject;
+
+            card.append(image, title, description);
+            container.appendChild(card);
+        });
+    }
+}
+ChatGPT said:
+Yes! Your JavaScript is correctly implementing lazy loading for images using:
+
+javascript
+Copy
+Edit
+image.loading = 'lazy';
+This ensures that the images will only load when they are near the viewport, improving page load speed and performance, especially for users on slow connections.
+
+Additionally, you're fetching the image data dynamically from data/artist.json and then assigning the images to elements dynamically, which works well with lazy loading.
+
+Additional Recommendations:
+Ensure Image Dimensions are Defined
+Browsers can better handle lazy loading if the images have defined width and height attributes. Consider modifying the image element creation like this:
+
+javascript
+Copy
+Edit
+image.width = 300; // Adjust based on your layout
+image.height = 400;
+Use Intersection Observer for Enhanced Lazy Loading
+While loading="lazy" is great, you could further optimize it using the Intersection Observer API to control when and how images load.
+
+Optimize JSON Image Paths
+Ensure that the paths in your artist.json file match your images/ directory structure to prevent broken images.
+
+Overall, your lazy loading implementation is correct and effective. Let me know if you need any optimizations! 🚀
+
+
+
+
+
+
+
+You said:
+help me take this html page and make it a double column instead of a single one. I will share my CSS code currently as well.
+ChatGPT said:
+Sure! Please share your current HTML and CSS, and I'll modify it to create a double-column layout while keeping it responsive. If you have any specific design preferences (such as column width ratio or alignment), let me know!
+
+
+
+
+
+
+
+You said:
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gary Guymon Artist Events</title>
+    <meta name="description" content="Gary Guymon Artist Events past and upcoming">
+    <meta name="author" content="Shannon Hickman">
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="styles/normalize.css">
+    <link rel="stylesheet" href="styles/artist.css">
+    <link rel="stylesheet" href="styles/artist.css">
+    <script src="scripts/gallery.js" defer></script>
+</head>
+
+<body class="gallery-page">
+    <header>
+        <div class="logo-container">
+            <img src="images/gary6.webp" alt="GaryLogo" class="logo" loading="lazy">
+            <h1>Gary Guymon Impression Art</h1>
+        </div>
+        <button type="button" id="menu" aria-label="Toggle Menu"></button>
+        <nav class="navigation">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="events.html" class="nav-link">Events</a>
+            <a href="gallery.html" class="nav-link">Art Gallery</a>
+            <a href="form.html" class="nav-link">Contact</a>
+        </nav>
+    </header>
+    <main>
+        <section class="hero-content">
+            <h1 class="hero-heading">Exhibitions & Events</h1>
+            <p class="hero-subtext">Explore upcoming events and exhibitions featuring Gary Guymon's artwork.</p>
+        </section>
+
+        <!-- Events Section -->
+        <section class="events-list">
+            <h2>Upcoming Events</h2>
+            <div class="event-card">
+                <h3>Southwest Art Show</h3>
+                <p>Date: March 15, 2025</p>
+                <p>Location: Art Center, Blanding, UT</p>
+                <p>Experience Gary Guymon's latest collection at this regional art exhibition.</p>
+            </div>
+
+            <div class="event-card">
+                <h3>Impressionist Workshop</h3>
+                <p>Date: April 10, 2025</p>
+                <p>Location: Moab Art Studio, Moab, UT</p>
+                <p>Join Gary for a hands-on workshop exploring impressionist painting techniques.</p>
+            </div>
+        </section>
+
+        <section class="past-events">
+            <h2>Past Events</h2>
+            <div class="event-card">
+                <h3>Desert Landscapes Exhibition</h3>
+                <p>Date: January 2024</p>
+                <p>Location: Canyon Museum of Art</p>
+                <p>Gary showcased his captivating desert-inspired works at this renowned exhibition.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="businessinfo">
+                <p>Gary Guymon Impression Art</p>
+                <p>E Flour Mill Rd</p>
+                <p>Blanding, UT 84511</p>
+                <p>Phone: (435) 678-2189</p>
+            </div>
+
+            <div class="sociallinks">
+                <a href="https://facebook.com"><img src="images/facebook.webp" alt="Facebook" loading="lazy"></a>
+                <a href="https://instagram.com"><img src="images/instagram.webp" alt="Instagram" loading="lazy"></a>
+                <a href="https://twitter.com"><img src="images/twitter.webp" alt="Twitter" loading="lazy"></a>
+            </div>
+
+            <div class="author">
+                <p>Shannon Hickman | Gary Guymon Impression Art</p>
+                <p>&copy; <span id="currentYear"></span> | Last Updated: <span id="lastModified"></span></p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+ChatGPT said:
+Now, please share your current CSS (artist.css) so I can modify it to create a two-column layout for the event sections while keeping the design responsive. Let me know if you have any preferences, such as:
+
+Equal-width columns or different ratios (e.g., 60/40)?
+Should the layout switch to a single column on smaller screens?
+Any specific alignment (centered, justified, etc.)?
+I'll update your CSS accordingly!
+
+
+
+
+
+
+
+You said:
+:root {
+    --primary-color: #2E2E2E;
+    /* Dark warm gray with high contrast */
+    --secondary-color: #5A5A5A;
+    /* Darker slate gray for balance */
+    --neutral-color1: #F5F5F5;
+    /* Light neutral background */
+    --neutral-color2: #2E4239;
+    /* Deep brown for text */
+    --accent-color1: #7A2D35;
+    /* Warm autumn-inspired accent */
+    --header-font: 'Playfair Display', serif;
+    --body-font: 'Lato', sans-serif;
+}
+
+
+body {
+    font-family: var(--body-font);
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    background-color: var(--neutral-color1);
+    color: var(--neutral-color2);
+    overflow-x: hidden;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--primary-color);
+    color: var(--neutral-color1);
+    padding: 1.5rem 2rem;
+    position: relative;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo {
+    width: 200px;
+    /* Adjust width to increase size */
+    max-height: 200px;
+    /* Set a height limit if needed */
+    height: auto;
+    object-fit: contain;
+    /* Ensures the logo doesn't stretch */
+}
+
+h1,
+h2,
+h3 {
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.logo-container h1 {
+    font-size: 2rem;
+    margin: 0;
+    font-family: var(--header-font, serif);
+    text-align: center;
+}
+
+/* Navigation Styling */
+.navigation {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-left: auto;
+    transition: all 0.3s ease-in-out;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--neutral-color1);
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: color 0.3s, background-color 0.3s;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    background-color: #4A4A4A;
+    color: var(--neutral-color1);
+}
+
+.nav-link.active {
+    background-color: var(--secondary-color);
+    color: var(--neutral-color1);
+}
+
+/* Hamburger Menu Button */
+#menu {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: var(--neutral-color1);
+    cursor: pointer;
+    z-index: 10;
+    position: relative;
+}
+
+#menu::before {
+    content: "☰";
+}
+
+#menu.open::before {
+    content: "✖";
+}
+
+#view-toggle {
+    position: relative;
+    /* Allows precise positioning */
+    top: 50%;
+    /* Move to the middle vertically */
+    left: 50%;
+    /* Move to the middle horizontally */
+    transform: translate(-50%, -50%);
+    /* Offset by half its own width & height */
+    text-align: center;
+    /* Center the text inside */
+    padding: 20px;
+    /* Add padding around the box */
+    background-color: #f0f0f0;
+    /* Background color */
+    border: 1px solid #ccc;
+    /* Optional border */
+    border-radius: 10px;
+    /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Optional shadow */
+    width: 400px;
+    /* Set a width for the box */
+}
+
+select {
+    margin-top: 10px;
+    padding: 5px;
+    width: 100%;
+
+}
+
+/* Grid View Styling */
+#directory {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+/* Added Styles for Hero Section of Index Page*/
+.hero {
+    position: relative;
+    width: 100%;
+    height: 70vh;
+    max-height: 500px;
+    overflow: hidden;
+}
+
+.hero picture {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.hero picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+button {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 2;
+    padding: 1rem 2rem;
+    background-color: var(--primary-color);
+    color: var(--neutral-color1);
+    text-decoration: none;
+    font-size: 1.25rem;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: var(--accent-color1);
+    color: var(--neutral-color1);
+}
+
+/* Hero Content */
+.hero-content {
+    background-color: var(--primary-color);
+    color: var(--neutral-color1);
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.hero-heading {
+    font-size: 2.5rem;
+    font-family: var(--header-font);
+    margin-bottom: 2rem;
+}
+
+/* Horizontal Hero Grid */
+.horizontal-hero-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+@media (max-width: 767px) {
+    .horizontal-hero-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+/* Hero Card Styles */
+.hero-card-horizontal {
+    background-color: var(--neutral-color1);
+    color: var(--neutral-color2);
+    border-radius: 10px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-card-horizontal h2 {
+    font-size: 1.5rem;
+    color: var(--neutral-color2);
+    margin: 0.5rem 0;
+}
+
+/* Image within the card */
+.hero-card-horizontal img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+/* Description Text */
+.hero-card-horizontal p {
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Hover Effect */
+.hero-card-horizontal:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Join page membership cards*/
+.card {
+    background-color: var(--neutral-color1);
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 1rem;
+    text-align: center;
+    height: 250px;
+    /* Adjust as needed for card size */
+    width: 250px;
+    /* Same as height to form a square */
+    min-width: 200px;
+    /* Ensures a minimum size */
+    display: flex;
+    /* Centering content */
+    flex-direction: column;
+    justify-content: center;
+    /* Animation setup */
+
+}
+
+.card img {
+    margin-bottom: 0.5rem;
+}
+
+/* Main Grid Layout */
+.main-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+/* Grid Layout for Spotlight Container */
+.spotlight-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    padding: 1.5rem;
+}
+
+/* Art and Spotlight Card Styling */
+.art-card,
+.spotlight-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+    background-color: var(--neutral-color1);
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    /* Rounded corners */
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
+    /* Card shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 550px;
+    /* Increase card height for larger image */
+    max-width: 450px;
+    /* Increase card width */
+    margin: 0 auto;
+}
+
+/* Card Image Styling */
+.art-card img,
+.spotlight-card img {
+    width: 100%;
+    margin-bottom: 0.5rem;
+    border-radius: 5px;
+}
+
+/*gives a hover effect to spotlight and art cards*/
+.art-card:hover,
+.spotlight-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hidden by default */
+.image-focus-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    /*modern browsers support this */
+    transition: opacity 0.3s ease;
+}
+
+/* Display image in full screen */
+.image-focus-box img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* Show the focus box when active */
+.image-focus-box.active {
+    opacity: 1;
+    pointer-events: all;
+    /*modern browsers support this */
+}
+
+
+
+
+/* Form styling remains the same */
+form {
+    grid-column: 1 / 2;
+    margin: 1rem 2%;
+}
+
+/* Existing form on join page label styles */
+form label {
+    display: block;
+    font-size: .8rem;
+    color: var(--primary-color);
+    padding-top: .2rem;
+    margin-bottom: 0.5rem;
+}
+
+form h3 {
+    font-size: .9rem;
+    color: var(--neutral-color2);
+    margin: 1.5rem 0 .2rem 0;
+    border-bottom: 1px solid var(--neutral-color1);
+}
+
+input[type=text],
+input[type=tel],
+input[type=date],
+input[type=email],
+textarea,
+select {
+    display: block;
+    margin: 0.1rem 0 1rem 0;
+    padding: 0.5rem;
+    border: 1px solid #000;
+    border-radius: 4px;
+    border-left-width: 5px;
+    border-left-color: var(--accent-color1);
+    font-size: 1rem;
+    color: var(--neutral-color2);
+    width: 90%;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+    border-color: black;
+    border-left-color: var(--secondary-color);
+    outline: none;
+}
+
+input:required:valid {
+    border-left-color: var(--secondary-color);
+}
+
+input[type=submit] {
+    border: none;
+    text-align: center;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 1rem;
+    padding: 0.75rem 1.5rem;
+    margin: 2rem 0;
+    font-size: 1.2rem;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* Autofill color */
+input:-webkit-autofill {
+    -webkit-text-fill-color: var(--neutral-color2);
+}
+
+.form-grid-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Form Layout */
+.form-layout {
+    background-color: var(--neutral-color1);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    font-weight: bold;
+    margin: 1rem 0 0.5rem;
+}
+
+form input,
+form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--secondary-color);
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+form input[type="submit"] {
+    margin-top: 1.5rem;
+    background-color: var(--accent-color1);
+    color: var(--neutral-color1);
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    padding: 0.75rem;
+    transition: background-color 0.3s;
+}
+
+form input[type="submit"]:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Contact Details Section */
+.contact-details {
+    background-color: var(--neutral-color1);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.contact-details h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.contact-details p {
+    margin: 0.5rem 0;
+}
+
+.contact-details a {
+    color: var(--accent-color1);
+    text-decoration: none;
+}
+
+.contact-details a:hover {
+    text-decoration: underline;
+}
+
+/* Contact Picture */
+.contact-picture {
+    margin-top: 2rem;
+    text-align: center;
+    background: var(--secondary-color);
+}
+
+.contact-picture img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Results section */
+#results {
+    background-color: var(--neutral-color1);
+    padding: 0 1rem;
+    border: 1px solid var(--primary-color);
+    border-radius: 6px;
+}
+
+/* Radio button styling */
+input[type="radio"] {
+    accent-color: var(--secondary-color);
+}
+
+/* Label styling */
+label {
+    color: var(--secondary-color);
+    font-size: 1rem;
+    margin-left: 1rem;
+}
+
+/*Styling for thank you page*/
+/* Results Section Styling */
+#results {
+    background-color: var(--neutral-color1);
+    padding: 1rem;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 2rem auto;
+    font-family: var(--body-font, sans-serif);
+}
+
+#results h2 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+#results p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--neutral-color2);
+}
+
+/*Events styling*/
+.events-list,
+.past-events {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.events-list h2,
+.past-events h2 {
+    font-size: 2rem;
+    color: var(--accent-color1);
+    margin-bottom: 1rem;
+}
+
+.event-card {
+    background-color: var(--neutral-color1);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.event-card h3 {
+    font-size: 1.5rem;
+    color: var(--neutral-color2);
+    margin-bottom: 0.5rem;
+}
+
+.event-card p {
+    margin: 0.5rem 0;
+    color: var(--neutral-color2);
+}
+
+/* Custom Modal Dialog Styles */
+.modal-dialog {
+    width: 80%;
+    max-width: 800px;
+    padding: 2rem 1.5rem;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    background-color: var(--neutral-color1);
+    text-align: center;
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-dialog img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+}
+
+/* Style and position the close button */
+#closeModal {
+    background: none;
+    border: none;
+    font-size: 2.5rem;
+    color: var(--neutral-color2);
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    line-height: 1;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: color 0.3s, background-color 0.3s;
+}
+
+#closeModal:hover {
+    color: var(--neutral-color1);
+    background-color: var(--accent-color1);
+}
+
+/* Remove default blue outline on focus */
+#closeModal:focus {
+    outline: none;
+}
+
+
+/* Modal fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* Footer Styling */
+footer {
+    background-color: var(--primary-color);
+    color: var(--neutral-color1);
+    padding: 2rem 1rem;
+    font-family: var(--body-font);
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center;
+}
+
+.sociallinks {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.sociallinks a img {
+    height: 60px;
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+.sociallinks a img:hover {
+    transform: scale(1.1);
+}
+
+.author {
+    text-align: right;
+}
+
+.author p {
+    margin: 0.5rem 0;
+}
+
+.notification {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #7A2D35;
+    /* Accent color */
+    color: #F5F5F5;
+    /* Light text color */
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+Share
+
+
+You said:
+does this js make my images that are going to be loaded from my son file lazy load
+ChatGPT said:
+Can you share the JavaScript code you're using? That way, I can check if it's correctly implementing lazy loading for your images. If you're loading images from a JSON file (which I assume you mean by "
+
+
+
+
+
+
+
+You said:
+document.addEventListener('DOMContentLoaded', () => {
+    setDynamicDates();
+    setupMenuToggle();
+
+    const currentPage = document.body.classList.contains('gallery-page') ? 'gallery' : 'home';
+    if (currentPage === 'gallery') {
+        initializeGallery();
+    } else if (currentPage === 'home') {
+        initializeSpotlight();
+    }
+
+    // Handle form submission for the contact page
+    const form = document.getElementById('contactForm');
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Collect form data
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+
+            // Save form data to sessionStorage
+            sessionStorage.setItem('formData', JSON.stringify(data));
+
+            // Redirect to the thank you page
+            window.location.href = 'thankyou.html';
+        });
+    }
+});
+
+// Display form data on the thankyou.html page
+window.addEventListener('DOMContentLoaded', () => {
+    const formSummaryContainer = document.getElementById('formSummary');
+    if (formSummaryContainer) {
+        const formData = JSON.parse(sessionStorage.getItem('formData'));
+        if (formData) {
+            formSummaryContainer.innerHTML = 
+                <p><strong>Name:</strong> ${formData.name}</p>
+                <p><strong>Email:</strong> ${formData.email}</p>
+                <p><strong>Art Title:</strong> ${formData['art-title']}</p>
+                <p><strong>Message:</strong> ${formData.message}</p>
+            ;
+        } else {
+            formSummaryContainer.innerHTML = <p>No form data available.</p>;
+        }
+    }
+});
+
+// Function to set the current year and last modified date dynamically
+function setDynamicDates() {
+    const currentYear = new Date().getFullYear();
+    document.getElementById('currentYear').textContent = currentYear;
+
+    const lastModifiedDate = new Date(document.lastModified);
+    document.getElementById('lastModified').textContent = Last Updated: ${lastModifiedDate.toLocaleDateString()};
+}
+
+// Function to toggle the mobile menu
+function setupMenuToggle() {
+    const hamButton = document.getElementById('menu');
+    const navigation = document.querySelector('.navigation');
+
+    hamButton.addEventListener('click', () => {
+        navigation.classList.toggle('open');
+        hamButton.classList.toggle('open');
+    });
+}
+
+// Function to initialize the gallery page
+async function initializeGallery() {
+    const directory = document.getElementById('directory');
+    const filterDropdown = document.getElementById('filter-price-level');
+    let artPiecesData = [];
+
+    try {
+        const response = await fetch('data/artist.json');
+        if (!response.ok) throw new Error(HTTP error! Status: ${response.status});
+
+        artPiecesData = await response.json();
+
+        populateFilterOptions(artPiecesData);
+        applySavedFilter(filterDropdown, artPiecesData);
+        displayArtPieces(artPiecesData);
+
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+
+    // Save filter selection to localStorage
+    filterDropdown.addEventListener('change', () => {
+        localStorage.setItem('selectedFilter', filterDropdown.value);
+        const selectedLevel = filterDropdown.value;
+        const filteredPieces = selectedLevel === 'all'
+            ? artPiecesData
+            : artPiecesData.filter(piece => piece.pricelevel === selectedLevel);
+        displayArtPieces(filteredPieces);
+    });
+
+    function populateFilterOptions(artPieces) {
+        const priceLevels = [...new Set(artPieces.map(piece => piece.pricelevel))];
+        filterDropdown.innerHTML = '<option value="all">All Price Levels</option>';
+        priceLevels.forEach(level => {
+            const option = document.createElement('option');
+            option.value = level;
+            option.textContent = level;
+            filterDropdown.appendChild(option);
+        });
+    }
+
+    function applySavedFilter(filterDropdown, artPieces) {
+        const savedFilter = localStorage.getItem('selectedFilter');
+        if (savedFilter) {
+            filterDropdown.value = savedFilter;
+            const filteredPieces = savedFilter === 'all'
+                ? artPieces
+                : artPieces.filter(piece => piece.pricelevel === savedFilter);
+            displayArtPieces(filteredPieces);
+        }
+    }
+
+    function displayArtPieces(artPieces) {
+        directory.innerHTML = '';
+        artPieces.forEach(piece => {
+            const card = document.createElement('section');
+            card.className = 'art-card';
+
+            const title = document.createElement('h2');
+            title.textContent = piece.name;
+
+            const image = document.createElement('img');
+            image.src = images/${piece.image};
+            image.alt = Image of ${piece.name};
+            image.loading = 'lazy';
+
+            image.addEventListener('click', () => openImageModal(image.src, piece.name));
+
+            const location = document.createElement('p');
+            location.textContent = Subject: ${piece.subject};
+
+            const price = document.createElement('p');
+            price.textContent = Price Level: ${piece.pricelevel};
+
+            card.append(image, title, location, price);
+            directory.appendChild(card);
+        });
+    }
+
+    function openImageModal(imageSrc, titleText) {
+        const modal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalTitle = document.getElementById('modalTitle');
+
+        modalImage.src = imageSrc;
+        modalTitle.textContent = titleText;
+        modal.showModal();
+    }
+
+    document.getElementById('closeModal').addEventListener('click', () => {
+        document.getElementById('imageModal').close();
+    });
+}
+
+// Function to initialize the spotlight on the homepage
+async function initializeSpotlight() {
+    const spotlightContainer = document.querySelector('.spotlight-container');
+
+    try {
+        const response = await fetch('data/artist.json');
+        if (!response.ok) throw new Error(HTTP error! Status: ${response.status});
+
+        const artPiecesData = await response.json();
+
+        // Select 3 random art pieces
+        const randomPieces = getRandomItems(artPiecesData, 3);
+
+        // Display the spotlight items
+        displaySpotlight(randomPieces, spotlightContainer);
+
+    } catch (error) {
+        console.error('Error fetching spotlight data:', error);
+    }
+
+    function getRandomItems(array, count) {
+        const shuffled = [...array].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
+    }
+
+    function displaySpotlight(artPieces, container) {
+        container.innerHTML = '';
+        artPieces.forEach(piece => {
+            const card = document.createElement('section');
+            card.className = 'spotlight-card';
+
+            const title = document.createElement('h2');
+            title.textContent = piece.name;
+
+            const image = document.createElement('img');
+            image.src = images/${piece.image};
+            image.alt = Spotlight Image of ${piece.name};
+            image.loading = 'lazy';
+
+            const description = document.createElement('p');
+            description.textContent = piece.subject;
+
+            card.append(image, title, description);
+            container.appendChild(card);
+        });
+    }
+}
+ChatGPT said:
+
+
+
+
+
+
+You said:
+there is a json fole it uses to load the art
+ChatGPT said:
+Yes, I can check whether your JavaScript properly lazy loads images from your JSON file. Please share your JavaScript code that fetches and displays the images from the JSON file, and I’ll review it for lazy loading implementation.
+
+If lazy loading isn't included, I can help you add it!
+
+
+
+
+
+
+
+You said:
+document.addEventListener('DOMContentLoaded', () => {
+    setDynamicDates();
+    setupMenuToggle();
+
+    const currentPage = document.body.classList.contains('gallery-page') ? 'gallery' : 'home';
+    if (currentPage === 'gallery') {
+        initializeGallery();
+    } else if (currentPage === 'home') {
+        initializeSpotlight();
+    }
+
+    // Handle form submission for the contact page
+    const form = document.getElementById('contactForm');
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Collect form data
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+
+            // Save form data to sessionStorage
+            sessionStorage.setItem('formData', JSON.stringify(data));
+
+            // Redirect to the thank you page
+            window.location.href = 'thankyou.html';
+        });
+    }
+});
+
+// Display form data on the thankyou.html page
+window.addEventListener('DOMContentLoaded', () => {
+    const formSummaryContainer = document.getElementById('formSummary');
+    if (formSummaryContainer) {
+        const formData = JSON.parse(sessionStorage.getItem('formData'));
+        if (formData) {
+            formSummaryContainer.innerHTML = 
+                <p><strong>Name:</strong> ${formData.name}</p>
+                <p><strong>Email:</strong> ${formData.email}</p>
+                <p><strong>Art Title:</strong> ${formData['art-title']}</p>
+                <p><strong>Message:</strong> ${formData.message}</p>
+            ;
+        } else {
+            formSummaryContainer.innerHTML = <p>No form data available.</p>;
+        }
+    }
+});
+
+// Function to set the current year and last modified date dynamically
+function setDynamicDates() {
+    const currentYear = new Date().getFullYear();
+    document.getElementById('currentYear').textContent = currentYear;
+
+    const lastModifiedDate = new Date(document.lastModified);
+    document.getElementById('lastModified').textContent = Last Updated: ${lastModifiedDate.toLocaleDateString()};
+}
+
+// Function to toggle the mobile menu
+function setupMenuToggle() {
+    const hamButton = document.getElementById('menu');
+    const navigation = document.querySelector('.navigation');
+
+    hamButton.addEventListener('click', () => {
+        navigation.classList.toggle('open');
+        hamButton.classList.toggle('open');
+    });
+}
+
+// Function to initialize the gallery page
+async function initializeGallery() {
+    const directory = document.getElementById('directory');
+    const filterDropdown = document.getElementById('filter-price-level');
+    let artPiecesData = [];
+
+    try {
+        const response = await fetch('data/artist.json');
+        if (!response.ok) throw new Error(HTTP error! Status: ${response.status});
+
+        artPiecesData = await response.json();
+
+        populateFilterOptions(artPiecesData);
+        applySavedFilter(filterDropdown, artPiecesData);
+        displayArtPieces(artPiecesData);
+
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+
+    // Save filter selection to localStorage
+    filterDropdown.addEventListener('change', () => {
+        localStorage.setItem('selectedFilter', filterDropdown.value);
+        const selectedLevel = filterDropdown.value;
+        const filteredPieces = selectedLevel === 'all'
+            ? artPiecesData
+            : artPiecesData.filter(piece => piece.pricelevel === selectedLevel);
+        displayArtPieces(filteredPieces);
+    });
+
+    function populateFilterOptions(artPieces) {
+        const priceLevels = [...new Set(artPieces.map(piece => piece.pricelevel))];
+        filterDropdown.innerHTML = '<option value="all">All Price Levels</option>';
+        priceLevels.forEach(level => {
+            const option = document.createElement('option');
+            option.value = level;
+            option.textContent = level;
+            filterDropdown.appendChild(option);
+        });
+    }
+
+    function applySavedFilter(filterDropdown, artPieces) {
+        const savedFilter = localStorage.getItem('selectedFilter');
+        if (savedFilter) {
+            filterDropdown.value = savedFilter;
+            const filteredPieces = savedFilter === 'all'
+                ? artPieces
+                : artPieces.filter(piece => piece.pricelevel === savedFilter);
+            displayArtPieces(filteredPieces);
+        }
+    }
+
+    function displayArtPieces(artPieces) {
+        directory.innerHTML = '';
+        artPieces.forEach(piece => {
+            const card = document.createElement('section');
+            card.className = 'art-card';
+
+            const title = document.createElement('h2');
+            title.textContent = piece.name;
+
+            const image = document.createElement('img');
+            image.src = images/${piece.image};
+            image.alt = Image of ${piece.name};
+            image.loading = 'lazy';
+
+            image.addEventListener('click', () => openImageModal(image.src, piece.name));
+
+            const location = document.createElement('p');
+            location.textContent = Subject: ${piece.subject};
+
+            const price = document.createElement('p');
+            price.textContent = Price Level: ${piece.pricelevel};
+
+            card.append(image, title, location, price);
+            directory.appendChild(card);
+        });
+    }
+
+    function openImageModal(imageSrc, titleText) {
+        const modal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalTitle = document.getElementById('modalTitle');
+
+        modalImage.src = imageSrc;
+        modalTitle.textContent = titleText;
+        modal.showModal();
+    }
+
+    document.getElementById('closeModal').addEventListener('click', () => {
+        document.getElementById('imageModal').close();
+    });
+}
+
+// Function to initialize the spotlight on the homepage
+async function initializeSpotlight() {
+    const spotlightContainer = document.querySelector('.spotlight-container');
+
+    try {
+        const response = await fetch('data/artist.json');
+        if (!response.ok) throw new Error(HTTP error! Status: ${response.status});
+
+        const artPiecesData = await response.json();
+
+        // Select 3 random art pieces
+        const randomPieces = getRandomItems(artPiecesData, 3);
+
+        // Display the spotlight items
+        displaySpotlight(randomPieces, spotlightContainer);
+
+    } catch (error) {
+        console.error('Error fetching spotlight data:', error);
+    }
+
+    function getRandomItems(array, count) {
+        const shuffled = [...array].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
+    }
+
+    function displaySpotlight(artPieces, container) {
+        container.innerHTML = '';
+        artPieces.forEach(piece => {
+            const card = document.createElement('section');
+            card.className = 'spotlight-card';
+
+            const title = document.createElement('h2');
+            title.textContent = piece.name;
+
+            const image = document.createElement('img');
+            image.src = images/${piece.image};
+            image.alt = Spotlight Image of ${piece.name};
+            image.loading = 'lazy';
+
+            const description = document.createElement('p');
+            description.textContent = piece.subject;
+
+            card.append(image, title, description);
+            container.appendChild(card);
+        });
+    }
+}
+ChatGPT said:
+Yes! Your JavaScript is correctly implementing lazy loading for images using:
+
+javascript
+Copy
+Edit
+image.loading = 'lazy';
+This ensures that the images will only load when they are near the viewport, improving page load speed and performance, especially for users on slow connections.
+
+Additionally, you're fetching the image data dynamically from data/artist.json and then assigning the images to elements dynamically, which works well with lazy loading.
+
+Additional Recommendations:
+Ensure Image Dimensions are Defined
+Browsers can better handle lazy loading if the images have defined width and height attributes. Consider modifying the image element creation like this:
+
+javascript
+Copy
+Edit
+image.width = 300; // Adjust based on your layout
+image.height = 400;
+Use Intersection Observer for Enhanced Lazy Loading
+While loading="lazy" is great, you could further optimize it using the Intersection Observer API to control when and how images load.
+
+Optimize JSON Image Paths
+Ensure that the paths in your artist.json file match your images/ directory structure to prevent broken images.
+
+Overall, your lazy loading implementation is correct and effective. Let me know if you need any optimizations! 🚀
+
+
+
+
+
+
+
+You said:
+help me take this html page and make it a double column instead of a single one. I will share my CSS code currently as well.
+ChatGPT said:
+Sure! Please share your current HTML and CSS, and I'll modify it to create a double-column layout while keeping it responsive. If you have any specific design preferences (such as column width ratio or alignment), let me know!
+
+
+
+
+
+
+
+You said:
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gary Guymon Artist Events</title>
+    <meta name="description" content="Gary Guymon Artist Events past and upcoming">
+    <meta name="author" content="Shannon Hickman">
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="styles/normalize.css">
+    <link rel="stylesheet" href="styles/artist.css">
+    <link rel="stylesheet" href="styles/artist.css">
+    <script src="scripts/gallery.js" defer></script>
+</head>
+
+<body class="gallery-page">
+    <header>
+        <div class="logo-container">
+            <img src="images/gary6.webp" alt="GaryLogo" class="logo" loading="lazy">
+            <h1>Gary Guymon Impression Art</h1>
+        </div>
+        <button type="button" id="menu" aria-label="Toggle Menu"></button>
+        <nav class="navigation">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="events.html" class="nav-link">Events</a>
+            <a href="gallery.html" class="nav-link">Art Gallery</a>
+            <a href="form.html" class="nav-link">Contact</a>
+        </nav>
+    </header>
+    <main>
+        <section class="hero-content">
+            <h1 class="hero-heading">Exhibitions & Events</h1>
+            <p class="hero-subtext">Explore upcoming events and exhibitions featuring Gary Guymon's artwork.</p>
+        </section>
+
+        <!-- Events Section -->
+        <section class="events-list">
+            <h2>Upcoming Events</h2>
+            <div class="event-card">
+                <h3>Southwest Art Show</h3>
+                <p>Date: March 15, 2025</p>
+                <p>Location: Art Center, Blanding, UT</p>
+                <p>Experience Gary Guymon's latest collection at this regional art exhibition.</p>
+            </div>
+
+            <div class="event-card">
+                <h3>Impressionist Workshop</h3>
+                <p>Date: April 10, 2025</p>
+                <p>Location: Moab Art Studio, Moab, UT</p>
+                <p>Join Gary for a hands-on workshop exploring impressionist painting techniques.</p>
+            </div>
+        </section>
+
+        <section class="past-events">
+            <h2>Past Events</h2>
+            <div class="event-card">
+                <h3>Desert Landscapes Exhibition</h3>
+                <p>Date: January 2024</p>
+                <p>Location: Canyon Museum of Art</p>
+                <p>Gary showcased his captivating desert-inspired works at this renowned exhibition.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="businessinfo">
+                <p>Gary Guymon Impression Art</p>
+                <p>E Flour Mill Rd</p>
+                <p>Blanding, UT 84511</p>
+                <p>Phone: (435) 678-2189</p>
+            </div>
+
+            <div class="sociallinks">
+                <a href="https://facebook.com"><img src="images/facebook.webp" alt="Facebook" loading="lazy"></a>
+                <a href="https://instagram.com"><img src="images/instagram.webp" alt="Instagram" loading="lazy"></a>
+                <a href="https://twitter.com"><img src="images/twitter.webp" alt="Twitter" loading="lazy"></a>
+            </div>
+
+            <div class="author">
+                <p>Shannon Hickman | Gary Guymon Impression Art</p>
+                <p>&copy; <span id="currentYear"></span> | Last Updated: <span id="lastModified"></span></p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+ChatGPT said:
+Now, please share your current CSS (artist.css) so I can modify it to create a two-column layout for the event sections while keeping the design responsive. Let me know if you have any preferences, such as:
+
+Equal-width columns or different ratios (e.g., 60/40)?
+Should the layout switch to a single column on smaller screens?
+Any specific alignment (centered, justified, etc.)?
+I'll update your CSS accordingly!
+
+
+
+
+
+
+
+You said:
+:root {
+    --primary-color: #2E2E2E;
+    /* Dark warm gray with high contrast */
+    --secondary-color: #5A5A5A;
+    /* Darker slate gray for balance */
+    --neutral-color1: #F5F5F5;
+    /* Light neutral background */
+    --neutral-color2: #2E4239;
+    /* Deep brown for text */
+    --accent-color1: #7A2D35;
+    /* Warm autumn-inspired accent */
+    --header-font: 'Playfair Display', serif;
+    --body-font: 'Lato', sans-serif;
+}
+
+
+body {
+    font-family: var(--body-font);
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    background-color: var(--neutral-color1);
+    color: var(--neutral-color2);
+    overflow-x: hidden;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--primary-color);
+    color: var(--neutral-color1);
+    padding: 1.5rem 2rem;
+    position: relative;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo {
+    width: 200px;
+    /* Adjust width to increase size */
+    max-height: 200px;
+    /* Set a height limit if needed */
+    height: auto;
+    object-fit: contain;
+    /* Ensures the logo doesn't stretch */
+}
+
+h1,
+h2,
+h3 {
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.logo-container h1 {
+    font-size: 2rem;
+    margin: 0;
+    font-family: var(--header-font, serif);
+    text-align: center;
+}
+
+/* Navigation Styling */
+.navigation {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-left: auto;
+    transition: all 0.3s ease-in-out;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--neutral-color1);
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: color 0.3s, background-color 0.3s;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    background-color: #4A4A4A;
+    color: var(--neutral-color1);
+}
+
+.nav-link.active {
+    background-color: var(--secondary-color);
+    color: var(--neutral-color1);
+}
+
+/* Hamburger Menu Button */
+#menu {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: var(--neutral-color1);
+    cursor: pointer;
+    z-index: 10;
+    position: relative;
+}
+
+#menu::before {
+    content: "☰";
+}
+
+#menu.open::before {
+    content: "✖";
+}
+
+#view-toggle {
+    position: relative;
+    /* Allows precise positioning */
+    top: 50%;
+    /* Move to the middle vertically */
+    left: 50%;
+    /* Move to the middle horizontally */
+    transform: translate(-50%, -50%);
+    /* Offset by half its own width & height */
+    text-align: center;
+    /* Center the text inside */
+    padding: 20px;
+    /* Add padding around the box */
+    background-color: #f0f0f0;
+    /* Background color */
+    border: 1px solid #ccc;
+    /* Optional border */
+    border-radius: 10px;
+    /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Optional shadow */
+    width: 400px;
+    /* Set a width for the box */
+}
+
+select {
+    margin-top: 10px;
+    padding: 5px;
+    width: 100%;
+
+}
+
+/* Grid View Styling */
+#directory {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+/* Added Styles for Hero Section of Index Page*/
+.hero {
+    position: relative;
+    width: 100%;
+    height: 70vh;
+    max-height: 500px;
+    overflow: hidden;
+}
+
+.hero picture {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.hero picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+button {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 2;
+    padding: 1rem 2rem;
+    background-color: var(--primary-color);
+    color: var(--neutral-color1);
+    text-decoration: none;
+    font-size: 1.25rem;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: var(--accent-color1);
+    color: var(--neutral-color1);
+}
+
+/* Hero Content */
+.hero-content {
+    background-color: var(--primary-color);
+    color: var(--neutral-color1);
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.hero-heading {
+    font-size: 2.5rem;
+    font-family: var(--header-font);
+    margin-bottom: 2rem;
+}
+
+/* Horizontal Hero Grid */
+.horizontal-hero-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+@media (max-width: 767px) {
+    .horizontal-hero-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+/* Hero Card Styles */
+.hero-card-horizontal {
+    background-color: var(--neutral-color1);
+    color: var(--neutral-color2);
+    border-radius: 10px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-card-horizontal h2 {
+    font-size: 1.5rem;
+    color: var(--neutral-color2);
+    margin: 0.5rem 0;
+}
+
+/* Image within the card */
+.hero-card-horizontal img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+/* Description Text */
+.hero-card-horizontal p {
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Hover Effect */
+.hero-card-horizontal:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Join page membership cards*/
+.card {
+    background-color: var(--neutral-color1);
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 1rem;
+    text-align: center;
+    height: 250px;
+    /* Adjust as needed for card size */
+    width: 250px;
+    /* Same as height to form a square */
+    min-width: 200px;
+    /* Ensures a minimum size */
+    display: flex;
+    /* Centering content */
+    flex-direction: column;
+    justify-content: center;
+    /* Animation setup */
+
+}
+
+.card img {
+    margin-bottom: 0.5rem;
+}
+
+/* Main Grid Layout */
+.main-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+/* Grid Layout for Spotlight Container */
+.spotlight-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    padding: 1.5rem;
+}
+
+/* Art and Spotlight Card Styling */
+.art-card,
+.spotlight-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+    background-color: var(--neutral-color1);
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    /* Rounded corners */
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
+    /* Card shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 550px;
+    /* Increase card height for larger image */
+    max-width: 450px;
+    /* Increase card width */
+    margin: 0 auto;
+}
+
+/* Card Image Styling */
+.art-card img,
+.spotlight-card img {
+    width: 100%;
+    margin-bottom: 0.5rem;
+    border-radius: 5px;
+}
+
+/*gives a hover effect to spotlight and art cards*/
+.art-card:hover,
+.spotlight-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hidden by default */
+.image-focus-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    /*modern browsers support this */
+    transition: opacity 0.3s ease;
+}
+
+/* Display image in full screen */
+.image-focus-box img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* Show the focus box when active */
+.image-focus-box.active {
+    opacity: 1;
+    pointer-events: all;
+    /*modern browsers support this */
+}
+
+
+
+
+/* Form styling remains the same */
+form {
+    grid-column: 1 / 2;
+    margin: 1rem 2%;
+}
+
+/* Existing form on join page label styles */
+form label {
+    display: block;
+    font-size: .8rem;
+    color: var(--primary-color);
+    padding-top: .2rem;
+    margin-bottom: 0.5rem;
+}
+
+form h3 {
+    font-size: .9rem;
+    color: var(--neutral-color2);
+    margin: 1.5rem 0 .2rem 0;
+    border-bottom: 1px solid var(--neutral-color1);
+}
+
+input[type=text],
+input[type=tel],
+input[type=date],
+input[type=email],
+textarea,
+select {
+    display: block;
+    margin: 0.1rem 0 1rem 0;
+    padding: 0.5rem;
+    border: 1px solid #000;
+    border-radius: 4px;
+    border-left-width: 5px;
+    border-left-color: var(--accent-color1);
+    font-size: 1rem;
+    color: var(--neutral-color2);
+    width: 90%;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+    border-color: black;
+    border-left-color: var(--secondary-color);
+    outline: none;
+}
+
+input:required:valid {
+    border-left-color: var(--secondary-color);
+}
+
+input[type=submit] {
+    border: none;
+    text-align: center;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 1rem;
+    padding: 0.75rem 1.5rem;
+    margin: 2rem 0;
+    font-size: 1.2rem;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* Autofill color */
+input:-webkit-autofill {
+    -webkit-text-fill-color: var(--neutral-color2);
+}
+
+.form-grid-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Form Layout */
+.form-layout {
+    background-color: var(--neutral-color1);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    font-weight: bold;
+    margin: 1rem 0 0.5rem;
+}
+
+form input,
+form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--secondary-color);
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+form input[type="submit"] {
+    margin-top: 1.5rem;
+    background-color: var(--accent-color1);
+    color: var(--neutral-color1);
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    padding: 0.75rem;
+    transition: background-color 0.3s;
+}
+
+form input[type="submit"]:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Contact Details Section */
+.contact-details {
+    background-color: var(--neutral-color1);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.contact-details h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.contact-details p {
+    margin: 0.5rem 0;
+}
+
+.contact-details a {
+    color: var(--accent-color1);
+    text-decoration: none;
+}
+
+.contact-details a:hover {
+    text-decoration: underline;
+}
+
+/* Contact Picture */
+.contact-picture {
+    margin-top: 2rem;
+    text-align: center;
+    background: var(--secondary-color);
+}
+
+.contact-picture img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Results section */
+#results {
+    background-color: var(--neutral-color1);
+    padding: 0 1rem;
+    border: 1px solid var(--primary-color);
+    border-radius: 6px;
+}
+
+/* Radio button styling */
+input[type="radio"] {
+    accent-color: var(--secondary-color);
+}
+
+/* Label styling */
+label {
+    color: var(--secondary-color);
+    font-size: 1rem;
+    margin-left: 1rem;
+}
+
+/*Styling for thank you page*/
+/* Results Section Styling */
+#results {
+    background-color: var(--neutral-color1);
+    padding: 1rem;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 2rem auto;
+    font-family: var(--body-font, sans-serif);
+}
+
+#results h2 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+#results p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--neutral-color2);
+}
+
+/*Events styling*/
+.events-list,
+.past-events {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.events-list h2,
+.past-events h2 {
+    font-size: 2rem;
+    color: var(--accent-color1);
+    margin-bottom: 1rem;
+}
+
+.event-card {
+    background-color: var(--neutral-color1);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.event-card h3 {
+    font-size: 1.5rem;
+    color: var(--neutral-color2);
+    margin-bottom: 0.5rem;
+}
+
+.event-card p {
+    margin: 0.5rem 0;
+    color: var(--neutral-color2);
+}
+
+/* Custom Modal Dialog Styles */
+.modal-dialog {
+    width: 80%;
+    max-width: 800px;
+    padding: 2rem 1.5rem;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    background-color: var(--neutral-color1);
+    text-align: center;
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-dialog img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+}
+
+/* Style and position the close button */
+#closeModal {
+    background: none;
+    border: none;
+    font-size: 2.5rem;
+    color: var(--neutral-color2);
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    line-height: 1;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: color 0.3s, background-color 0.3s;
+}
+
+#closeModal:hover {
+    color: var(--neutral-color1);
+    background-color: var(--accent-color1);
+}
+
+/* Remove default blue outline on focus */
+#closeModal:focus {
+    outline: none;
+}
+
+
+/* Modal fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* Footer Styling */
+footer {
+    background-color: var(--primary-color);
+    color: var(--neutral-color1);
+    padding: 2rem 1rem;
+    font-family: var(--body-font);
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center;
+}
+
+.sociallinks {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.sociallinks a img {
+    height: 60px;
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+.sociallinks a img:hover {
+    transform: scale(1.1);
+}
+
+.author {
+    text-align: right;
+}
+
+.author p {
+    margin: 0.5rem 0;
+}
+
+.notification {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #7A2D35;
+    /* Accent color */
+    color: #F5F5F5;
+    /* Light text color */
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+ChatGPT said:
+To create a two-column layout for your events section, I will modify your CSS so that:
+
+Upcoming and Past Events appear side by side on larger screens.
+The layout remains single-column on smaller screens for responsiveness.
+The event cards inside each section maintain their existing styling.
+🔧 Updated CSS for Two-Column Layout
+Add this CSS to your artist.css file:
+
+css
+Copy
+Edit
+/* Events Section - Two Column Layout */
+.events-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Ensure each event list (upcoming & past) stays in its column */
+.events-list, .past-events {
+    width: 100%;
+}
+
+/* Ensure event cards are properly displayed */
+.event-card {
+    background-color: var(--neutral-color1);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Responsive Design - Single Column on Smaller Screens */
+@media (max-width: 768px) {
+    .events-container {
+        grid-template-columns: 1fr; /* Switch back to single column */
+    }
+}
+🔧 Modify Your HTML
+Wrap the Upcoming Events and Past Events sections inside a new .events-container div:
+
+html
+Copy
+Edit
+<main>
+    <section class="hero-content">
+        <h1 class="hero-heading">Exhibitions & Events</h1>
+        <p class="hero-subtext">Explore upcoming events and exhibitions featuring Gary Guymon's artwork.</p>
+    </section>
+
+    <!-- Events Section -->
+    <div class="events-container">
+        <section class="events-list">
+            <h2>Upcoming Events</h2>
+            <div class="event-card">
+                <h3>Southwest Art Show</h3>
+                <p>Date: March 15, 2025</p>
+                <p>Location: Art Center, Blanding, UT</p>
+                <p>Experience Gary Guymon's latest collection at this regional art exhibition.</p>
+            </div>
+
+            <div class="event-card">
+                <h3>Impressionist Workshop</h3>
+                <p>Date: April 10, 2025</p>
+                <p>Location: Moab Art Studio, Moab, UT</p>
+                <p>Join Gary for a hands-on workshop exploring impressionist painting techniques.</p>
+            </div>
+        </section>
+
+        <section class="past-events">
+            <h2>Past Events</h2>
+            <div class="event-card">
+                <h3>Desert Landscapes Exhibition</h3>
+                <p>Date: January 2024</p>
+                <p>Location: Canyon Museum of Art</p>
+                <p>Gary showcased his captivating desert-inspired works at this renowned exhibition.</p>
+            </div>
+        </section>
+    </div>
+</main>
+✅ How It Works
+On desktops, events-container creates a two-column layout, placing Upcoming Events on the left and Past Events on the right.
+On mobile screens (≤768px), it switches back to a single-column layout for better readability.
+This will make your events page visually balanced and easy to read on all devices! 🚀
+
+Let me know if you need adjustments! 😊
+
+
+
+
+
+
+
+You said:
+/* Events Section - Two Column Layout */
+.events-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Ensure each event list (upcoming & past) stays in its column */
+.events-list, .past-events {
+    width: 100%;
+}
+
+/* Ensure event cards are properly displayed */
+.event-card {
+    background-color: var(--neutral-color1);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+ChatGPT said:
+Your CSS for the two-column event layout looks well-structured, but I noticed a few things that might help fine-tune the layout:
+
+🔧 Improvements & Fixes
+Ensure Equal Heights for Columns: If one section has more content than the other, it might make the columns misaligned. Add align-items: start; to .events-container to fix this.
+Ensure Proper Centering & Spacing: Adding justify-content: center; makes sure the sections remain centered.
+Handle Responsive Behavior: At smaller screen sizes (like mobile), you want to ensure it stacks properly.
+✅ Improved CSS
+css
+Copy
+Edit
+/* Events Section - Two Column Layout */
+.events-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    align-items: start; /* Ensures both columns align at the top */
+    justify-content: center; /* Centers content properly */
+}
+
+/* Ensure each event list (upcoming & past) stays in its column */
+.events-list, .past-events {
+    width: 100%;
+}
+
+/* Event Card Styling */
+.event-card {
+    background-color: var(--neutral-color1);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Add a hover effect for better interaction */
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design - Single Column on Mobile */
+@media (max-width: 768px) {
+    .events-container {
+        grid-template-columns: 1fr; /* Switch to a single-column layout */
+    }
+}
+✅ What This Fixes
+Better alignment: Ensures events in both columns start from the top.
+Smooth spacing & centering: Fixes inconsistencies in alignment.
+Hover Effect: Adds a subtle animation for better user experience.
+Mobile Responsive: Converts to a single column when the screen is narrow.
+This should now work beautifully across desktop and mobile devices! 🚀 Let me know if you want any refinements. 😊
+
+
+
+
+
+
+
+You said:
+i just edited my html to this and my CSS, I will give my files, it's still just one column
+ChatGPT said:
+Please upload your updated HTML and CSS files, and I'll review them to fix why the layout is still single-column instead of two columns. I'll test and ensure it works properly. 🚀
+
+
+
+
+
+
+
+You said:
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gary Guymon Artist Events</title>
+    <meta name="description" content="Gary Guymon Artist Events past and upcoming">
+    <meta name="author" content="Shannon Hickman">
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="styles/normalize.css">
+    <link rel="stylesheet" href="styles/artist.css">
+    <link rel="stylesheet" href="styles/artist.css">
+    <script src="scripts/gallery.js" defer></script>
+</head>
+
+<body class="gallery-page">
+    <header>
+        <div class="logo-container">
+            <img src="images/gary6.webp" alt="GaryLogo" class="logo" loading="lazy">
+            <h1>Gary Guymon Impression Art</h1>
+        </div>
+        <button type="button" id="menu" aria-label="Toggle Menu"></button>
+        <nav class="navigation">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="events.html" class="nav-link">Events</a>
+            <a href="gallery.html" class="nav-link">Art Gallery</a>
+            <a href="form.html" class="nav-link">Contact</a>
+        </nav>
+    </header>
+    <main>
+        <section class="hero-content">
+            <h1 class="hero-heading">Exhibitions & Events</h1>
+            <p class="hero-subtext">Explore upcoming events and exhibitions featuring Gary Guymon's artwork.</p>
+        </section>
+    
+        <!-- Events Section -->
+        <div class="events-container">
+            <section class="events-list">
+                <h2>Upcoming Events</h2>
+                <div class="event-card">
+                    <h3>Southwest Art Show</h3>
+                    <p>Date: March 15, 2025</p>
+                    <p>Location: Art Center, Blanding, UT</p>
+                    <p>Experience Gary Guymon's latest collection at this regional art exhibition.</p>
+                </div>
+    
+                <div class="event-card">
+                    <h3>Impressionist Workshop</h3>
+                    <p>Date: April 10, 2025</p>
+                    <p>Location: Moab Art Studio, Moab, UT</p>
+                    <p>Join Gary for a hands-on workshop exploring impressionist painting techniques.</p>
+                </div>
+            </section>
+    
+            <section class="past-events">
+                <h2>Past Events</h2>
+                <div class="event-card">
+                    <h3>Desert Landscapes Exhibition</h3>
+                    <p>Date: January 2024</p>
+                    <p>Location: Canyon Museum of Art</p>
+                    <p>Gary showcased his captivating desert-inspired works at this renowned exhibition.</p>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+
+    <footer>
+        <div class="footer-container">
+            <div class="businessinfo">
+                <p>Gary Guymon Impression Art</p>
+                <p>E Flour Mill Rd</p>
+                <p>Blanding, UT 84511</p>
+                <p>Phone: (435) 678-2189</p>
+            </div>
+
+            <div class="sociallinks">
+                <a href="https://facebook.com"><img src="images/facebook.webp" alt="Facebook" loading="lazy"></a>
+                <a href="https://instagram.com"><img src="images/instagram.webp" alt="Instagram" loading="lazy"></a>
+                <a href="https://twitter.com"><img src="images/twitter.webp" alt="Twitter" loading="lazy"></a>
+            </div>
+
+            <div class="author">
+                <p>Shannon Hickman | Gary Guymon Impression Art</p>
+                <p>&copy; <span id="currentYear"></span> | Last Updated: <span id="lastModified"></span></p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+ChatGPT said:
+I'll check your HTML structure and CSS now. Please upload your current artist.css file so I can pinpoint the exact issue causing the layout to remain single-column. This will allow me to provide a precise fix.
+
+
+2/2
+
+You said:
+:root {
+    --primary-color: #2E2E2E;
+    /* Dark warm gray with high contrast */
+    --secondary-color: #5A5A5A;
+    /* Darker slate gray for balance */
+    --neutral-color1: #F5F5F5;
+    /* Light neutral background */
+    --neutral-color2: #2E4239;
+    /* Deep brown for text */
+    --accent-color1: #7A2D35;
+    /* Warm autumn-inspired accent */
+    --header-font: 'Playfair Display', serif;
+    --body-font: 'Lato', sans-serif;
+}
+
+
+body {
+    font-family: var(--body-font);
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    background-color: var(--neutral-color1);
+    color: var(--neutral-color2);
+    overflow-x: hidden;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--primary-color);
+    color: var(--neutral-color1);
+    padding: 1.5rem 2rem;
+    position: relative;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo {
+    width: 200px;
+    /* Adjust width to increase size */
+    max-height: 200px;
+    /* Set a height limit if needed */
+    height: auto;
+    object-fit: contain;
+    /* Ensures the logo doesn't stretch */
+}
+
+h1,
+h2,
+h3 {
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.logo-container h1 {
+    font-size: 2rem;
+    margin: 0;
+    font-family: var(--header-font, serif);
+    text-align: center;
+}
+
+/* Navigation Styling */
+.navigation {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-left: auto;
+    transition: all 0.3s ease-in-out;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--neutral-color1);
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: color 0.3s, background-color 0.3s;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    background-color: #4A4A4A;
+    color: var(--neutral-color1);
+}
+
+.nav-link.active {
+    background-color: var(--secondary-color);
+    color: var(--neutral-color1);
+}
+
+/* Hamburger Menu Button */
+#menu {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: var(--neutral-color1);
+    cursor: pointer;
+    z-index: 10;
+    position: relative;
+}
+
+#menu::before {
+    content: "☰";
+}
+
+#menu.open::before {
+    content: "✖";
+}
+
+#view-toggle {
+    position: relative;
+    /* Allows precise positioning */
+    top: 50%;
+    /* Move to the middle vertically */
+    left: 50%;
+    /* Move to the middle horizontally */
+    transform: translate(-50%, -50%);
+    /* Offset by half its own width & height */
+    text-align: center;
+    /* Center the text inside */
+    padding: 20px;
+    /* Add padding around the box */
+    background-color: #f0f0f0;
+    /* Background color */
+    border: 1px solid #ccc;
+    /* Optional border */
+    border-radius: 10px;
+    /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Optional shadow */
+    width: 400px;
+    /* Set a width for the box */
+}
+
+select {
+    margin-top: 10px;
+    padding: 5px;
+    width: 100%;
+
+}
+
+/* Grid View Styling */
+#directory {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+/* Added Styles for Hero Section of Index Page*/
+.hero {
+    position: relative;
+    width: 100%;
+    height: 70vh;
+    max-height: 500px;
+    overflow: hidden;
+}
+
+.hero picture {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.hero picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+button {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 2;
+    padding: 1rem 2rem;
+    background-color: var(--primary-color);
+    color: var(--neutral-color1);
+    text-decoration: none;
+    font-size: 1.25rem;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: var(--accent-color1);
+    color: var(--neutral-color1);
+}
+
+/* Hero Content */
+.hero-content {
+    background-color: var(--primary-color);
+    color: var(--neutral-color1);
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.hero-heading {
+    font-size: 2.5rem;
+    font-family: var(--header-font);
+    margin-bottom: 2rem;
+}
+
+/* Horizontal Hero Grid */
+.horizontal-hero-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+@media (max-width: 767px) {
+    .horizontal-hero-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+/* Hero Card Styles */
+.hero-card-horizontal {
+    background-color: var(--neutral-color1);
+    color: var(--neutral-color2);
+    border-radius: 10px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-card-horizontal h2 {
+    font-size: 1.5rem;
+    color: var(--neutral-color2);
+    margin: 0.5rem 0;
+}
+
+Share
+
+
+You said:
+does this js make my images that are going to be loaded from my son file lazy load
+ChatGPT said:
+Can you share the JavaScript code you're using? That way, I can check if it's correctly implementing lazy loading for your images. If you're loading images from a JSON file (which I assume you mean by "
+
+
+
+
+
+
+
+You said:
+document.addEventListener('DOMContentLoaded', () => {
+    setDynamicDates();
+    setupMenuToggle();
+
+    const currentPage = document.body.classList.contains('gallery-page') ? 'gallery' : 'home';
+    if (currentPage === 'gallery') {
+        initializeGallery();
+    } else if (currentPage === 'home') {
+        initializeSpotlight();
+    }
+
+    // Handle form submission for the contact page
+    const form = document.getElementById('contactForm');
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Collect form data
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+
+            // Save form data to sessionStorage
+            sessionStorage.setItem('formData', JSON.stringify(data));
+
+            // Redirect to the thank you page
+            window.location.href = 'thankyou.html';
+        });
+    }
+});
+
+// Display form data on the thankyou.html page
+window.addEventListener('DOMContentLoaded', () => {
+    const formSummaryContainer = document.getElementById('formSummary');
+    if (formSummaryContainer) {
+        const formData = JSON.parse(sessionStorage.getItem('formData'));
+        if (formData) {
+            formSummaryContainer.innerHTML = 
+                <p><strong>Name:</strong> ${formData.name}</p>
+                <p><strong>Email:</strong> ${formData.email}</p>
+                <p><strong>Art Title:</strong> ${formData['art-title']}</p>
+                <p><strong>Message:</strong> ${formData.message}</p>
+            ;
+        } else {
+            formSummaryContainer.innerHTML = <p>No form data available.</p>;
+        }
+    }
+});
+
+// Function to set the current year and last modified date dynamically
+function setDynamicDates() {
+    const currentYear = new Date().getFullYear();
+    document.getElementById('currentYear').textContent = currentYear;
+
+    const lastModifiedDate = new Date(document.lastModified);
+    document.getElementById('lastModified').textContent = Last Updated: ${lastModifiedDate.toLocaleDateString()};
+}
+
+// Function to toggle the mobile menu
+function setupMenuToggle() {
+    const hamButton = document.getElementById('menu');
+    const navigation = document.querySelector('.navigation');
+
+    hamButton.addEventListener('click', () => {
+        navigation.classList.toggle('open');
+        hamButton.classList.toggle('open');
+    });
+}
+
+// Function to initialize the gallery page
+async function initializeGallery() {
+    const directory = document.getElementById('directory');
+    const filterDropdown = document.getElementById('filter-price-level');
+    let artPiecesData = [];
+
+    try {
+        const response = await fetch('data/artist.json');
+        if (!response.ok) throw new Error(HTTP error! Status: ${response.status});
+
+        artPiecesData = await response.json();
+
+        populateFilterOptions(artPiecesData);
+        applySavedFilter(filterDropdown, artPiecesData);
+        displayArtPieces(artPiecesData);
+
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+
+    // Save filter selection to localStorage
+    filterDropdown.addEventListener('change', () => {
+        localStorage.setItem('selectedFilter', filterDropdown.value);
+        const selectedLevel = filterDropdown.value;
+        const filteredPieces = selectedLevel === 'all'
+            ? artPiecesData
+            : artPiecesData.filter(piece => piece.pricelevel === selectedLevel);
+        displayArtPieces(filteredPieces);
+    });
+
+    function populateFilterOptions(artPieces) {
+        const priceLevels = [...new Set(artPieces.map(piece => piece.pricelevel))];
+        filterDropdown.innerHTML = '<option value="all">All Price Levels</option>';
+        priceLevels.forEach(level => {
+            const option = document.createElement('option');
+            option.value = level;
+            option.textContent = level;
+            filterDropdown.appendChild(option);
+        });
+    }
+
+    function applySavedFilter(filterDropdown, artPieces) {
+        const savedFilter = localStorage.getItem('selectedFilter');
+        if (savedFilter) {
+            filterDropdown.value = savedFilter;
+            const filteredPieces = savedFilter === 'all'
+                ? artPieces
+                : artPieces.filter(piece => piece.pricelevel === savedFilter);
+            displayArtPieces(filteredPieces);
+        }
+    }
+
+    function displayArtPieces(artPieces) {
+        directory.innerHTML = '';
+        artPieces.forEach(piece => {
+            const card = document.createElement('section');
+            card.className = 'art-card';
+
+            const title = document.createElement('h2');
+            title.textContent = piece.name;
+
+            const image = document.createElement('img');
+            image.src = images/${piece.image};
+            image.alt = Image of ${piece.name};
+            image.loading = 'lazy';
+
+            image.addEventListener('click', () => openImageModal(image.src, piece.name));
+
+            const location = document.createElement('p');
+            location.textContent = Subject: ${piece.subject};
+
+            const price = document.createElement('p');
+            price.textContent = Price Level: ${piece.pricelevel};
+
+            card.append(image, title, location, price);
+            directory.appendChild(card);
+        });
+    }
+
+    function openImageModal(imageSrc, titleText) {
+        const modal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalTitle = document.getElementById('modalTitle');
+
+        modalImage.src = imageSrc;
+        modalTitle.textContent = titleText;
+        modal.showModal();
+    }
+
+    document.getElementById('closeModal').addEventListener('click', () => {
+        document.getElementById('imageModal').close();
+    });
+}
+
+// Function to initialize the spotlight on the homepage
+async function initializeSpotlight() {
+    const spotlightContainer = document.querySelector('.spotlight-container');
+
+    try {
+        const response = await fetch('data/artist.json');
+        if (!response.ok) throw new Error(HTTP error! Status: ${response.status});
+
+        const artPiecesData = await response.json();
+
+        // Select 3 random art pieces
+        const randomPieces = getRandomItems(artPiecesData, 3);
+
+        // Display the spotlight items
+        displaySpotlight(randomPieces, spotlightContainer);
+
+    } catch (error) {
+        console.error('Error fetching spotlight data:', error);
+    }
+
+    function getRandomItems(array, count) {
+        const shuffled = [...array].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
+    }
+
+    function displaySpotlight(artPieces, container) {
+        container.innerHTML = '';
+        artPieces.forEach(piece => {
+            const card = document.createElement('section');
+            card.className = 'spotlight-card';
+
+            const title = document.createElement('h2');
+            title.textContent = piece.name;
+
+            const image = document.createElement('img');
+            image.src = images/${piece.image};
+            image.alt = Spotlight Image of ${piece.name};
+            image.loading = 'lazy';
+
+            const description = document.createElement('p');
+            description.textContent = piece.subject;
+
+            card.append(image, title, description);
+            container.appendChild(card);
+        });
+    }
+}
+ChatGPT said:
+
+
+
+
+
+
+You said:
+there is a json fole it uses to load the art
+ChatGPT said:
+Yes, I can check whether your JavaScript properly lazy loads images from your JSON file. Please share your JavaScript code that fetches and displays the images from the JSON file, and I’ll review it for lazy loading implementation.
+
+If lazy loading isn't included, I can help you add it!
+
+
+
+
+
+
+
+You said:
+document.addEventListener('DOMContentLoaded', () => {
+    setDynamicDates();
+    setupMenuToggle();
+
+    const currentPage = document.body.classList.contains('gallery-page') ? 'gallery' : 'home';
+    if (currentPage === 'gallery') {
+        initializeGallery();
+    } else if (currentPage === 'home') {
+        initializeSpotlight();
+    }
+
+    // Handle form submission for the contact page
+    const form = document.getElementById('contactForm');
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Collect form data
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+
+            // Save form data to sessionStorage
+            sessionStorage.setItem('formData', JSON.stringify(data));
+
+            // Redirect to the thank you page
+            window.location.href = 'thankyou.html';
+        });
+    }
+});
+
+// Display form data on the thankyou.html page
+window.addEventListener('DOMContentLoaded', () => {
+    const formSummaryContainer = document.getElementById('formSummary');
+    if (formSummaryContainer) {
+        const formData = JSON.parse(sessionStorage.getItem('formData'));
+        if (formData) {
+            formSummaryContainer.innerHTML = 
+                <p><strong>Name:</strong> ${formData.name}</p>
+                <p><strong>Email:</strong> ${formData.email}</p>
+                <p><strong>Art Title:</strong> ${formData['art-title']}</p>
+                <p><strong>Message:</strong> ${formData.message}</p>
+            ;
+        } else {
+            formSummaryContainer.innerHTML = <p>No form data available.</p>;
+        }
+    }
+});
+
+// Function to set the current year and last modified date dynamically
+function setDynamicDates() {
+    const currentYear = new Date().getFullYear();
+    document.getElementById('currentYear').textContent = currentYear;
+
+    const lastModifiedDate = new Date(document.lastModified);
+    document.getElementById('lastModified').textContent = Last Updated: ${lastModifiedDate.toLocaleDateString()};
+}
+
+// Function to toggle the mobile menu
+function setupMenuToggle() {
+    const hamButton = document.getElementById('menu');
+    const navigation = document.querySelector('.navigation');
+
+    hamButton.addEventListener('click', () => {
+        navigation.classList.toggle('open');
+        hamButton.classList.toggle('open');
+    });
+}
+
+// Function to initialize the gallery page
+async function initializeGallery() {
+    const directory = document.getElementById('directory');
+    const filterDropdown = document.getElementById('filter-price-level');
+    let artPiecesData = [];
+
+    try {
+        const response = await fetch('data/artist.json');
+        if (!response.ok) throw new Error(HTTP error! Status: ${response.status});
+
+        artPiecesData = await response.json();
+
+        populateFilterOptions(artPiecesData);
+        applySavedFilter(filterDropdown, artPiecesData);
+        displayArtPieces(artPiecesData);
+
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+
+    // Save filter selection to localStorage
+    filterDropdown.addEventListener('change', () => {
+        localStorage.setItem('selectedFilter', filterDropdown.value);
+        const selectedLevel = filterDropdown.value;
+        const filteredPieces = selectedLevel === 'all'
+            ? artPiecesData
+            : artPiecesData.filter(piece => piece.pricelevel === selectedLevel);
+        displayArtPieces(filteredPieces);
+    });
+
+    function populateFilterOptions(artPieces) {
+        const priceLevels = [...new Set(artPieces.map(piece => piece.pricelevel))];
+        filterDropdown.innerHTML = '<option value="all">All Price Levels</option>';
+        priceLevels.forEach(level => {
+            const option = document.createElement('option');
+            option.value = level;
+            option.textContent = level;
+            filterDropdown.appendChild(option);
+        });
+    }
+
+    function applySavedFilter(filterDropdown, artPieces) {
+        const savedFilter = localStorage.getItem('selectedFilter');
+        if (savedFilter) {
+            filterDropdown.value = savedFilter;
+            const filteredPieces = savedFilter === 'all'
+                ? artPieces
+                : artPieces.filter(piece => piece.pricelevel === savedFilter);
+            displayArtPieces(filteredPieces);
+        }
+    }
+
+    function displayArtPieces(artPieces) {
+        directory.innerHTML = '';
+        artPieces.forEach(piece => {
+            const card = document.createElement('section');
+            card.className = 'art-card';
+
+            const title = document.createElement('h2');
+            title.textContent = piece.name;
+
+            const image = document.createElement('img');
+            image.src = images/${piece.image};
+            image.alt = Image of ${piece.name};
+            image.loading = 'lazy';
+
+            image.addEventListener('click', () => openImageModal(image.src, piece.name));
+
+            const location = document.createElement('p');
+            location.textContent = Subject: ${piece.subject};
+
+            const price = document.createElement('p');
+            price.textContent = Price Level: ${piece.pricelevel};
+
+            card.append(image, title, location, price);
+            directory.appendChild(card);
+        });
+    }
+
+    function openImageModal(imageSrc, titleText) {
+        const modal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalTitle = document.getElementById('modalTitle');
+
+        modalImage.src = imageSrc;
+        modalTitle.textContent = titleText;
+        modal.showModal();
+    }
+
+    document.getElementById('closeModal').addEventListener('click', () => {
+        document.getElementById('imageModal').close();
+    });
+}
+
+// Function to initialize the spotlight on the homepage
+async function initializeSpotlight() {
+    const spotlightContainer = document.querySelector('.spotlight-container');
+
+    try {
+        const response = await fetch('data/artist.json');
+        if (!response.ok) throw new Error(HTTP error! Status: ${response.status});
+
+        const artPiecesData = await response.json();
+
+        // Select 3 random art pieces
+        const randomPieces = getRandomItems(artPiecesData, 3);
+
+        // Display the spotlight items
+        displaySpotlight(randomPieces, spotlightContainer);
+
+    } catch (error) {
+        console.error('Error fetching spotlight data:', error);
+    }
+
+    function getRandomItems(array, count) {
+        const shuffled = [...array].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
+    }
+
+    function displaySpotlight(artPieces, container) {
+        container.innerHTML = '';
+        artPieces.forEach(piece => {
+            const card = document.createElement('section');
+            card.className = 'spotlight-card';
+
+            const title = document.createElement('h2');
+            title.textContent = piece.name;
+
+            const image = document.createElement('img');
+            image.src = images/${piece.image};
+            image.alt = Spotlight Image of ${piece.name};
+            image.loading = 'lazy';
+
+            const description = document.createElement('p');
+            description.textContent = piece.subject;
+
+            card.append(image, title, description);
+            container.appendChild(card);
+        });
+    }
+}
+ChatGPT said:
+Yes! Your JavaScript is correctly implementing lazy loading for images using:
+
+javascript
+Copy
+Edit
+image.loading = 'lazy';
+This ensures that the images will only load when they are near the viewport, improving page load speed and performance, especially for users on slow connections.
+
+Additionally, you're fetching the image data dynamically from data/artist.json and then assigning the images to elements dynamically, which works well with lazy loading.
+
+Additional Recommendations:
+Ensure Image Dimensions are Defined
+Browsers can better handle lazy loading if the images have defined width and height attributes. Consider modifying the image element creation like this:
+
+javascript
+Copy
+Edit
+image.width = 300; // Adjust based on your layout
+image.height = 400;
+Use Intersection Observer for Enhanced Lazy Loading
+While loading="lazy" is great, you could further optimize it using the Intersection Observer API to control when and how images load.
+
+Optimize JSON Image Paths
+Ensure that the paths in your artist.json file match your images/ directory structure to prevent broken images.
+
+Overall, your lazy loading implementation is correct and effective. Let me know if you need any optimizations! 🚀
+
+
+
+
+
+
+
+You said:
+help me take this html page and make it a double column instead of a single one. I will share my CSS code currently as well.
+ChatGPT said:
+Sure! Please share your current HTML and CSS, and I'll modify it to create a double-column layout while keeping it responsive. If you have any specific design preferences (such as column width ratio or alignment), let me know!
+
+
+
+
+
+
+
+You said:
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gary Guymon Artist Events</title>
+    <meta name="description" content="Gary Guymon Artist Events past and upcoming">
+    <meta name="author" content="Shannon Hickman">
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="styles/normalize.css">
+    <link rel="stylesheet" href="styles/artist.css">
+    <link rel="stylesheet" href="styles/artist.css">
+    <script src="scripts/gallery.js" defer></script>
+</head>
+
+<body class="gallery-page">
+    <header>
+        <div class="logo-container">
+            <img src="images/gary6.webp" alt="GaryLogo" class="logo" loading="lazy">
+            <h1>Gary Guymon Impression Art</h1>
+        </div>
+        <button type="button" id="menu" aria-label="Toggle Menu"></button>
+        <nav class="navigation">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="events.html" class="nav-link">Events</a>
+            <a href="gallery.html" class="nav-link">Art Gallery</a>
+            <a href="form.html" class="nav-link">Contact</a>
+        </nav>
+    </header>
+    <main>
+        <section class="hero-content">
+            <h1 class="hero-heading">Exhibitions & Events</h1>
+            <p class="hero-subtext">Explore upcoming events and exhibitions featuring Gary Guymon's artwork.</p>
+        </section>
+
+        <!-- Events Section -->
+        <section class="events-list">
+            <h2>Upcoming Events</h2>
+            <div class="event-card">
+                <h3>Southwest Art Show</h3>
+                <p>Date: March 15, 2025</p>
+                <p>Location: Art Center, Blanding, UT</p>
+                <p>Experience Gary Guymon's latest collection at this regional art exhibition.</p>
+            </div>
+
+            <div class="event-card">
+                <h3>Impressionist Workshop</h3>
+                <p>Date: April 10, 2025</p>
+                <p>Location: Moab Art Studio, Moab, UT</p>
+                <p>Join Gary for a hands-on workshop exploring impressionist painting techniques.</p>
+            </div>
+        </section>
+
+        <section class="past-events">
+            <h2>Past Events</h2>
+            <div class="event-card">
+                <h3>Desert Landscapes Exhibition</h3>
+                <p>Date: January 2024</p>
+                <p>Location: Canyon Museum of Art</p>
+                <p>Gary showcased his captivating desert-inspired works at this renowned exhibition.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="businessinfo">
+                <p>Gary Guymon Impression Art</p>
+                <p>E Flour Mill Rd</p>
+                <p>Blanding, UT 84511</p>
+                <p>Phone: (435) 678-2189</p>
+            </div>
+
+            <div class="sociallinks">
+                <a href="https://facebook.com"><img src="images/facebook.webp" alt="Facebook" loading="lazy"></a>
+                <a href="https://instagram.com"><img src="images/instagram.webp" alt="Instagram" loading="lazy"></a>
+                <a href="https://twitter.com"><img src="images/twitter.webp" alt="Twitter" loading="lazy"></a>
+            </div>
+
+            <div class="author">
+                <p>Shannon Hickman | Gary Guymon Impression Art</p>
+                <p>&copy; <span id="currentYear"></span> | Last Updated: <span id="lastModified"></span></p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+ChatGPT said:
+Now, please share your current CSS (artist.css) so I can modify it to create a two-column layout for the event sections while keeping the design responsive. Let me know if you have any preferences, such as:
+
+Equal-width columns or different ratios (e.g., 60/40)?
+Should the layout switch to a single column on smaller screens?
+Any specific alignment (centered, justified, etc.)?
+I'll update your CSS accordingly!
+
+
+
+
+
+
+
+You said:
+:root {
+    --primary-color: #2E2E2E;
+    /* Dark warm gray with high contrast */
+    --secondary-color: #5A5A5A;
+    /* Darker slate gray for balance */
+    --neutral-color1: #F5F5F5;
+    /* Light neutral background */
+    --neutral-color2: #2E4239;
+    /* Deep brown for text */
+    --accent-color1: #7A2D35;
+    /* Warm autumn-inspired accent */
+    --header-font: 'Playfair Display', serif;
+    --body-font: 'Lato', sans-serif;
+}
+
+
+body {
+    font-family: var(--body-font);
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    background-color: var(--neutral-color1);
+    color: var(--neutral-color2);
+    overflow-x: hidden;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--primary-color);
+    color: var(--neutral-color1);
+    padding: 1.5rem 2rem;
+    position: relative;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo {
+    width: 200px;
+    /* Adjust width to increase size */
+    max-height: 200px;
+    /* Set a height limit if needed */
+    height: auto;
+    object-fit: contain;
+    /* Ensures the logo doesn't stretch */
+}
+
+h1,
+h2,
+h3 {
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.logo-container h1 {
+    font-size: 2rem;
+    margin: 0;
+    font-family: var(--header-font, serif);
+    text-align: center;
+}
+
+/* Navigation Styling */
+.navigation {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-left: auto;
+    transition: all 0.3s ease-in-out;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--neutral-color1);
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: color 0.3s, background-color 0.3s;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    background-color: #4A4A4A;
+    color: var(--neutral-color1);
+}
+
+.nav-link.active {
+    background-color: var(--secondary-color);
+    color: var(--neutral-color1);
+}
+
+/* Hamburger Menu Button */
+#menu {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: var(--neutral-color1);
+    cursor: pointer;
+    z-index: 10;
+    position: relative;
+}
+
+#menu::before {
+    content: "☰";
+}
+
+#menu.open::before {
+    content: "✖";
+}
+
+#view-toggle {
+    position: relative;
+    /* Allows precise positioning */
+    top: 50%;
+    /* Move to the middle vertically */
+    left: 50%;
+    /* Move to the middle horizontally */
+    transform: translate(-50%, -50%);
+    /* Offset by half its own width & height */
+    text-align: center;
+    /* Center the text inside */
+    padding: 20px;
+    /* Add padding around the box */
+    background-color: #f0f0f0;
+    /* Background color */
+    border: 1px solid #ccc;
+    /* Optional border */
+    border-radius: 10px;
+    /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Optional shadow */
+    width: 400px;
+    /* Set a width for the box */
+}
+
+select {
+    margin-top: 10px;
+    padding: 5px;
+    width: 100%;
+
+}
+
+/* Grid View Styling */
+#directory {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+/* Added Styles for Hero Section of Index Page*/
+.hero {
+    position: relative;
+    width: 100%;
+    height: 70vh;
+    max-height: 500px;
+    overflow: hidden;
+}
+
+.hero picture {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.hero picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+button {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 2;
+    padding: 1rem 2rem;
+    background-color: var(--primary-color);
+    color: var(--neutral-color1);
+    text-decoration: none;
+    font-size: 1.25rem;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: var(--accent-color1);
+    color: var(--neutral-color1);
+}
+
+/* Hero Content */
+.hero-content {
+    background-color: var(--primary-color);
+    color: var(--neutral-color1);
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.hero-heading {
+    font-size: 2.5rem;
+    font-family: var(--header-font);
+    margin-bottom: 2rem;
+}
+
+/* Horizontal Hero Grid */
+.horizontal-hero-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+@media (max-width: 767px) {
+    .horizontal-hero-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+/* Hero Card Styles */
+.hero-card-horizontal {
+    background-color: var(--neutral-color1);
+    color: var(--neutral-color2);
+    border-radius: 10px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-card-horizontal h2 {
+    font-size: 1.5rem;
+    color: var(--neutral-color2);
+    margin: 0.5rem 0;
+}
+
+/* Image within the card */
+.hero-card-horizontal img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+/* Description Text */
+.hero-card-horizontal p {
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Hover Effect */
+.hero-card-horizontal:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Join page membership cards*/
+.card {
+    background-color: var(--neutral-color1);
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 1rem;
+    text-align: center;
+    height: 250px;
+    /* Adjust as needed for card size */
+    width: 250px;
+    /* Same as height to form a square */
+    min-width: 200px;
+    /* Ensures a minimum size */
+    display: flex;
+    /* Centering content */
+    flex-direction: column;
+    justify-content: center;
+    /* Animation setup */
+
+}
+
+.card img {
+    margin-bottom: 0.5rem;
+}
+
+/* Main Grid Layout */
+.main-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+/* Grid Layout for Spotlight Container */
+.spotlight-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    padding: 1.5rem;
+}
+
+/* Art and Spotlight Card Styling */
+.art-card,
+.spotlight-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+    background-color: var(--neutral-color1);
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    /* Rounded corners */
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
+    /* Card shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 550px;
+    /* Increase card height for larger image */
+    max-width: 450px;
+    /* Increase card width */
+    margin: 0 auto;
+}
+
+/* Card Image Styling */
+.art-card img,
+.spotlight-card img {
+    width: 100%;
+    margin-bottom: 0.5rem;
+    border-radius: 5px;
+}
+
+/*gives a hover effect to spotlight and art cards*/
+.art-card:hover,
+.spotlight-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hidden by default */
+.image-focus-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    /*modern browsers support this */
+    transition: opacity 0.3s ease;
+}
+
+/* Display image in full screen */
+.image-focus-box img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* Show the focus box when active */
+.image-focus-box.active {
+    opacity: 1;
+    pointer-events: all;
+    /*modern browsers support this */
+}
+
+
+
+
+/* Form styling remains the same */
+form {
+    grid-column: 1 / 2;
+    margin: 1rem 2%;
+}
+
+/* Existing form on join page label styles */
+form label {
+    display: block;
+    font-size: .8rem;
+    color: var(--primary-color);
+    padding-top: .2rem;
+    margin-bottom: 0.5rem;
+}
+
+form h3 {
+    font-size: .9rem;
+    color: var(--neutral-color2);
+    margin: 1.5rem 0 .2rem 0;
+    border-bottom: 1px solid var(--neutral-color1);
+}
+
+input[type=text],
+input[type=tel],
+input[type=date],
+input[type=email],
+textarea,
+select {
+    display: block;
+    margin: 0.1rem 0 1rem 0;
+    padding: 0.5rem;
+    border: 1px solid #000;
+    border-radius: 4px;
+    border-left-width: 5px;
+    border-left-color: var(--accent-color1);
+    font-size: 1rem;
+    color: var(--neutral-color2);
+    width: 90%;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+    border-color: black;
+    border-left-color: var(--secondary-color);
+    outline: none;
+}
+
+input:required:valid {
+    border-left-color: var(--secondary-color);
+}
+
+input[type=submit] {
+    border: none;
+    text-align: center;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 1rem;
+    padding: 0.75rem 1.5rem;
+    margin: 2rem 0;
+    font-size: 1.2rem;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* Autofill color */
+input:-webkit-autofill {
+    -webkit-text-fill-color: var(--neutral-color2);
+}
+
+.form-grid-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Form Layout */
+.form-layout {
+    background-color: var(--neutral-color1);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    font-weight: bold;
+    margin: 1rem 0 0.5rem;
+}
+
+form input,
+form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--secondary-color);
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+form input[type="submit"] {
+    margin-top: 1.5rem;
+    background-color: var(--accent-color1);
+    color: var(--neutral-color1);
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    padding: 0.75rem;
+    transition: background-color 0.3s;
+}
+
+form input[type="submit"]:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Contact Details Section */
+.contact-details {
+    background-color: var(--neutral-color1);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.contact-details h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.contact-details p {
+    margin: 0.5rem 0;
+}
+
+.contact-details a {
+    color: var(--accent-color1);
+    text-decoration: none;
+}
+
+.contact-details a:hover {
+    text-decoration: underline;
+}
+
+/* Contact Picture */
+.contact-picture {
+    margin-top: 2rem;
+    text-align: center;
+    background: var(--secondary-color);
+}
+
+.contact-picture img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Results section */
+#results {
+    background-color: var(--neutral-color1);
+    padding: 0 1rem;
+    border: 1px solid var(--primary-color);
+    border-radius: 6px;
+}
+
+/* Radio button styling */
+input[type="radio"] {
+    accent-color: var(--secondary-color);
+}
+
+/* Label styling */
+label {
+    color: var(--secondary-color);
+    font-size: 1rem;
+    margin-left: 1rem;
+}
+
+/*Styling for thank you page*/
+/* Results Section Styling */
+#results {
+    background-color: var(--neutral-color1);
+    padding: 1rem;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 2rem auto;
+    font-family: var(--body-font, sans-serif);
+}
+
+#results h2 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+#results p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--neutral-color2);
+}
+
+/*Events styling*/
+.events-list,
+.past-events {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.events-list h2,
+.past-events h2 {
+    font-size: 2rem;
+    color: var(--accent-color1);
+    margin-bottom: 1rem;
+}
+
+.event-card {
+    background-color: var(--neutral-color1);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.event-card h3 {
+    font-size: 1.5rem;
+    color: var(--neutral-color2);
+    margin-bottom: 0.5rem;
+}
+
+.event-card p {
+    margin: 0.5rem 0;
+    color: var(--neutral-color2);
+}
+
+/* Custom Modal Dialog Styles */
+.modal-dialog {
+    width: 80%;
+    max-width: 800px;
+    padding: 2rem 1.5rem;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    background-color: var(--neutral-color1);
+    text-align: center;
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-dialog img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+}
+
+/* Style and position the close button */
+#closeModal {
+    background: none;
+    border: none;
+    font-size: 2.5rem;
+    color: var(--neutral-color2);
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    line-height: 1;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: color 0.3s, background-color 0.3s;
+}
+
+#closeModal:hover {
+    color: var(--neutral-color1);
+    background-color: var(--accent-color1);
+}
+
+/* Remove default blue outline on focus */
+#closeModal:focus {
+    outline: none;
+}
+
+
+/* Modal fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* Footer Styling */
+footer {
+    background-color: var(--primary-color);
+    color: var(--neutral-color1);
+    padding: 2rem 1rem;
+    font-family: var(--body-font);
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center;
+}
+
+.sociallinks {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.sociallinks a img {
+    height: 60px;
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+.sociallinks a img:hover {
+    transform: scale(1.1);
+}
+
+.author {
+    text-align: right;
+}
+
+.author p {
+    margin: 0.5rem 0;
+}
+
+.notification {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #7A2D35;
+    /* Accent color */
+    color: #F5F5F5;
+    /* Light text color */
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+ChatGPT said:
+To create a two-column layout for your events section, I will modify your CSS so that:
+
+Upcoming and Past Events appear side by side on larger screens.
+The layout remains single-column on smaller screens for responsiveness.
+The event cards inside each section maintain their existing styling.
+🔧 Updated CSS for Two-Column Layout
+Add this CSS to your artist.css file:
+
+css
+Copy
+Edit
+/* Events Section - Two Column Layout */
+.events-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Ensure each event list (upcoming & past) stays in its column */
+.events-list, .past-events {
+    width: 100%;
+}
+
+/* Ensure event cards are properly displayed */
+.event-card {
+    background-color: var(--neutral-color1);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Image within the card */
+.hero-card-horizontal img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+/* Description Text */
+.hero-card-horizontal p {
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Hover Effect */
+.hero-card-horizontal:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Join page membership cards*/
+.card {
+    background-color: var(--neutral-color1);
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 1rem;
+    text-align: center;
+    height: 250px;
+    /* Adjust as needed for card size */
+    width: 250px;
+    /* Same as height to form a square */
+    min-width: 200px;
+    /* Ensures a minimum size */
+    display: flex;
+    /* Centering content */
+    flex-direction: column;
+    justify-content: center;
+    /* Animation setup */
+
+}
+
+.card img {
+    margin-bottom: 0.5rem;
+}
+
+/* Main Grid Layout */
+.main-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+/* Grid Layout for Spotlight Container */
+.spotlight-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    padding: 1.5rem;
+}
+
+/* Art and Spotlight Card Styling */
+.art-card,
+.spotlight-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+    background-color: var(--neutral-color1);
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    /* Rounded corners */
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
+    /* Card shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 550px;
+    /* Increase card height for larger image */
+    max-width: 450px;
+    /* Increase card width */
+    margin: 0 auto;
+}
+
+/* Card Image Styling */
+.art-card img,
+.spotlight-card img {
+    width: 100%;
+    margin-bottom: 0.5rem;
+    border-radius: 5px;
+}
+
+/*gives a hover effect to spotlight and art cards*/
+.art-card:hover,
+.spotlight-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hidden by default */
+.image-focus-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    /*modern browsers support this */
+    transition: opacity 0.3s ease;
+}
+
+/* Display image in full screen */
+.image-focus-box img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* Show the focus box when active */
+.image-focus-box.active {
+    opacity: 1;
+    pointer-events: all;
+    /*modern browsers support this */
+}
+
+
+
+
+/* Form styling remains the same */
+form {
+    grid-column: 1 / 2;
+    margin: 1rem 2%;
+}
+
+/* Existing form on join page label styles */
+form label {
+    display: block;
+    font-size: .8rem;
+    color: var(--primary-color);
+    padding-top: .2rem;
+    margin-bottom: 0.5rem;
+}
+
+form h3 {
+    font-size: .9rem;
+    color: var(--neutral-color2);
+    margin: 1.5rem 0 .2rem 0;
+    border-bottom: 1px solid var(--neutral-color1);
+}
+
+input[type=text],
+input[type=tel],
+input[type=date],
+input[type=email],
+textarea,
+select {
+    display: block;
+    margin: 0.1rem 0 1rem 0;
+    padding: 0.5rem;
+    border: 1px solid #000;
+    border-radius: 4px;
+    border-left-width: 5px;
+    border-left-color: var(--accent-color1);
+    font-size: 1rem;
+    color: var(--neutral-color2);
+    width: 90%;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+    border-color: black;
+    border-left-color: var(--secondary-color);
+    outline: none;
+}
+
+input:required:valid {
+    border-left-color: var(--secondary-color);
+}
+
+input[type=submit] {
+    border: none;
+    text-align: center;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 1rem;
+    padding: 0.75rem 1.5rem;
+    margin: 2rem 0;
+    font-size: 1.2rem;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* Autofill color */
+input:-webkit-autofill {
+    -webkit-text-fill-color: var(--neutral-color2);
+}
+
+.form-grid-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Form Layout */
+.form-layout {
+    background-color: var(--neutral-color1);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    font-weight: bold;
+    margin: 1rem 0 0.5rem;
+}
+
+form input,
+form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--secondary-color);
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+form input[type="submit"] {
+    margin-top: 1.5rem;
+    background-color: var(--accent-color1);
+    color: var(--neutral-color1);
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    padding: 0.75rem;
+    transition: background-color 0.3s;
+}
+
+form input[type="submit"]:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Contact Details Section */
+.contact-details {
+    background-color: var(--neutral-color1);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.contact-details h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.contact-details p {
+    margin: 0.5rem 0;
+}
+
+.contact-details a {
+    color: var(--accent-color1);
+    text-decoration: none;
+}
+
+.contact-details a:hover {
+    text-decoration: underline;
+}
+
+/* Contact Picture */
+.contact-picture {
+    margin-top: 2rem;
+    text-align: center;
+    background: var(--secondary-color);
+}
+
+.contact-picture img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Results section */
+#results {
+    background-color: var(--neutral-color1);
+    padding: 0 1rem;
+    border: 1px solid var(--primary-color);
+    border-radius: 6px;
+}
+
+/* Radio button styling */
+input[type="radio"] {
+    accent-color: var(--secondary-color);
+}
+
+/* Label styling */
+label {
+    color: var(--secondary-color);
+    font-size: 1rem;
+    margin-left: 1rem;
+}
+
+/*Styling for thank you page*/
+/* Results Section Styling */
+#results {
+    background-color: var(--neutral-color1);
+    padding: 1rem;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 2rem auto;
+    font-family: var(--body-font, sans-serif);
+}
+
+#results h2 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+#results p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--neutral-color2);
+}
+
+/*Events styling*/
+.events-list,
+.past-events {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.events-list h2,
+.past-events h2 {
+    font-size: 2rem;
+    color: var(--accent-color1);
+    margin-bottom: 1rem;
+}
+
+.event-card {
+    background-color: var(--neutral-color1);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.event-card h3 {
+    font-size: 1.5rem;
+    color: var(--neutral-color2);
+    margin-bottom: 0.5rem;
+}
+
+.event-card p {
+    margin: 0.5rem 0;
+    color: var(--neutral-color2);
+}
+
+/* Custom Modal Dialog Styles */
+.modal-dialog {
+    width: 80%;
+    max-width: 800px;
+    padding: 2rem 1.5rem;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    background-color: var(--neutral-color1);
+    text-align: center;
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-dialog img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+}
+
+/* Style and position the close button */
+#closeModal {
+    background: none;
+    border: none;
+    font-size: 2.5rem;
+    color: var(--neutral-color2);
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    line-height: 1;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: color 0.3s, background-color 0.3s;
+}
+
+#closeModal:hover {
+    color: var(--neutral-color1);
+    background-color: var(--accent-color1);
+}
+
+/* Remove default blue outline on focus */
+#closeModal:focus {
+    outline: none;
+}
+
+
+/* Modal fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* Footer Styling */
+footer {
+    background-color: var(--primary-color);
+    color: var(--neutral-color1);
+    padding: 2rem 1rem;
+    font-family: var(--body-font);
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center;
+}
+
+.sociallinks {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.sociallinks a img {
+    height: 60px;
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+.sociallinks a img:hover {
+    transform: scale(1.1);
+}
+
+.author {
+    text-align: right;
+}
+
+.author p {
+    margin: 0.5rem 0;
+}
+
+.notification {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #7A2D35;
+    /* Accent color */
+    color: #F5F5F5;
+    /* Light text color */
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Events Section - Two Column Layout */
+.events-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    align-items: start; /* Aligns the columns to the top */
+}
+
+/* Ensure each section stays in its column */
+.events-list,
+.past-events {
+    width: 100%; /* Prevents shrinking */
+}
+
+/* Event Card Styling */
+.event-card {
+    background-color: var(--neutral-color1);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover Effect */
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+}
+
 /* Image within the card */
 .hero-card-horizontal img {
     width: 100%;
